@@ -20,9 +20,9 @@ pmi-interface/yarn-debug.log*
 pmi-interface/yarn-error.log*
 
 # Visual Studio Code
-pim/.vscode/
-pim/.vs/
+pmi/.vscode/
+pmi/.vs/
 
 # DotNetCore
-pim/bin/
-pim/obj/
+pmi/bin/
+pmi/obj/
