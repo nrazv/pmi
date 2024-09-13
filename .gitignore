@@ -10,6 +10,7 @@ pmi-interface/coverage
 pmi-interface/build
 
 # misc
+pmi-interface/package-lock.json
 pmi-interface/.DS_Store
 pmi-interface/.env.local
 pmi-interface/.env.development.local
