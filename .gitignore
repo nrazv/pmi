@@ -1,5 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 pmi-interface/node_modules
 
@@ -20,3 +18,11 @@ pmi-interface/.env.production.local
 pmi-interface/npm-debug.log*
 pmi-interface/yarn-debug.log*
 pmi-interface/yarn-error.log*
+
+# Visual Studio Code
+pim/.vscode/
+pim/.vs/
+
+# DotNetCore
+pim/bin/
+pim/obj/
