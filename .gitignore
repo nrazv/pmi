@@ -1,0 +1,21 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+pmi-interface/node_modules
+
+# testing
+pmi-interface/coverage
+
+# production
+pmi-interface/build
+
+# misc
+pmi-interface/.DS_Store
+pmi-interface/.env.local
+pmi-interface/.env.development.local
+pmi-interface/.env.test.local
+pmi-interface/.env.production.local
+
+pmi-interface/npm-debug.log*
+pmi-interface/yarn-debug.log*
+pmi-interface/yarn-error.log*
