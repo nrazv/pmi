@@ -26,3 +26,6 @@ pmi/.vs/
 # DotNetCore
 pmi/bin/
 pmi/obj/
+
+# user
+pmi/*.user
