@@ -1,11 +1,11 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
+# Step 1: Base stage for runtime environment
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
+# Step 2: Build stage to compile the application
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
@@ -15,10 +15,12 @@ COPY . .
 WORKDIR "/src/."
 RUN dotnet build "./pmi.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
+# Step 3: Publish stage to publish the application
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./pmi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
+# Step 4: Final stage to run the application (runtime environment)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
