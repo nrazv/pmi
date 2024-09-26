@@ -1,46 +1,33 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
 using pmi.Project.Models;
 
 namespace pmi.Project.Services;
 
 public class ProjectService : IProjectService
 {
-    private readonly string _rootPath;
+    private readonly ProjectManager _projectManager;
+    private readonly IMapper _mapper;
 
     public ProjectService(IConfiguration configuration)
     {
-        _rootPath = configuration.GetSection("RootFolder").Value ?? "projects";
-    }
-    public ProjectEntity GetById(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public (ProjectEntity?, string? errorMessage) NewProject(string projectName)
-    {
-        var project = createNewProject(projectName, out string errorMessage);
-
-        return (project, errorMessage);
-    }
-
-
-    private ProjectEntity? createNewProject(string projectname, out string errorMessage)
-    {
-        string newProjectPath = $@"{_rootPath}/{projectname}";
-        errorMessage = null;
-
-        if (Directory.Exists(newProjectPath))
+        string projectFolder = configuration.GetSection("RootFolder").Value ?? "projects";
+        _projectManager = new ProjectManager(projectFolder);
+        _mapper = new Mapper(new MapperConfiguration(conf =>
         {
-            errorMessage = "Project already exists";
-            return null;
-        }
+            conf.CreateMap<ProjectEntity, ProjectDto>();
+        }));
+    }
 
-        DirectoryInfo newProjectFolder = Directory.CreateDirectory(newProjectPath);
-        var createdDate = newProjectFolder.CreationTime;
-        var lastUpdate = newProjectFolder.LastWriteTime;
-        var name = newProjectFolder.Name;
+    public List<ProjectDto> GetProjects()
+    {
+        var projects = _projectManager.GetProjects();
+        return _mapper.Map<List<ProjectDto>>(projects);
+    }
 
-        return new ProjectEntity(id: "awdaw23", name, createdDate, lastUpdate);
+    public (ProjectDto?, string? errorMessage) NewProject(string projectName)
+    {
+        var project = _projectManager.createNewProject(projectName, out string errorMessage);
+
+        return (_mapper.Map<ProjectDto>(project), errorMessage);
     }
 }

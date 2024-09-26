@@ -7,6 +7,8 @@ public class ProjectEntity
     public DateTime CreatedDate { get; init; }
     public DateTime? LastUpdated { get; init; }
 
+    public ProjectEntity() { }
+
     public ProjectEntity(string id, string name, DateTime createdDate, DateTime? lastUpdated)
     {
         Id = id;

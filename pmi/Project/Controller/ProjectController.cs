@@ -10,15 +10,10 @@ namespace pmi.Project.Controller;
 public class ProjectController : ControllerBase
 {
     IProjectService _projectService;
-    IMapper _mapper;
 
     public ProjectController(IProjectService projectService)
     {
         _projectService = projectService;
-        _mapper = new Mapper(new MapperConfiguration(conf =>
-        {
-            conf.CreateMap<ProjectEntity, ProjectDto>();
-        }));
     }
 
     [HttpPost("new", Name = "New Project")]
@@ -29,12 +24,16 @@ public class ProjectController : ControllerBase
         var (project, errorMessage) = _projectService.NewProject(projectName);
         if (errorMessage is null)
         {
-            ProjectDto projectDto = _mapper.Map<ProjectDto>(project);
-            return Ok(projectDto);
+            return Ok(project);
         }
 
         return BadRequest(errorMessage);
     }
 
+    [HttpGet("all", Name = "Get all projects")]
+    public List<ProjectDto> GetAll()
+    {
+        return _projectService.GetProjects();
+    }
 
 }

@@ -4,6 +4,6 @@ namespace pmi.Project.Services;
 
 public interface IProjectService
 {
-    public (ProjectEntity?, string? errorMessage) NewProject(string projectName);
-    public ProjectEntity GetById(Guid id);
+    public List<ProjectDto> GetProjects();
+    public (ProjectDto?, string? errorMessage) NewProject(string projectName);
 }
