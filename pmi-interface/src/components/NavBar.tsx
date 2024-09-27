@@ -6,7 +6,7 @@ import ProjectMenu from "./ProjectMenu";
 
 function NavBar() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, marginBottom: 8 }}>
       <AppBar position="fixed" color="inherit">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>

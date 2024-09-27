@@ -6,14 +6,37 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
+import { Project } from "../shared/Project";
 
 type Props = {
   open: boolean;
   close?: () => void;
 };
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 function NewProjectDialog({ open, close }: Props) {
+  const [name, setName] = useState<string>();
+
+  const createProject = () => {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Host: "localhost:8080",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+    fetch(`${apiUrl}project/new?projectName=${name}`, requestOptions).then(
+      (response) => {
+        if (response.status == 200) {
+          close?.();
+        }
+      }
+    );
+  };
+
   return (
     <React.Fragment>
       <Dialog
@@ -42,11 +65,16 @@ function NewProjectDialog({ open, close }: Props) {
             type="text"
             fullWidth
             variant="standard"
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setName(event.target.value);
+            }}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={close}>Cancel</Button>
-          <Button type="submit">Create</Button>
+          <Button onClick={() => createProject()} type="submit">
+            Create
+          </Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>
