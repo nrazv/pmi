@@ -26,7 +26,7 @@ public class ProjectService : IProjectService
 
     public (ProjectDto?, string? errorMessage) NewProject(string projectName)
     {
-        var project = _projectManager.createNewProject(projectName, out string errorMessage);
+        var project = _projectManager.createNewProject(projectName, out string? errorMessage);
 
         return (_mapper.Map<ProjectDto>(project), errorMessage);
     }

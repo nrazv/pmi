@@ -10,7 +10,6 @@ namespace pmi.Project.Controller;
 public class ProjectController : ControllerBase
 {
     IProjectService _projectService;
-
     public ProjectController(IProjectService projectService)
     {
         _projectService = projectService;
@@ -26,7 +25,6 @@ public class ProjectController : ControllerBase
         {
             return Ok(project);
         }
-
         return BadRequest(errorMessage);
     }
 

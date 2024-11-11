@@ -4,6 +4,6 @@ namespace pmi.Tool.Services
 {
     public interface IToolService
     {
-        public void RunTool(ToolExecutionRequest toolExecution);
+        public string RunTool(ToolExecutionRequest toolExecution);
     }
 }

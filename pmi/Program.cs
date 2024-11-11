@@ -8,7 +8,18 @@ public class Program
 {
     public static void Main(string[] args)
     {
+
+        var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(name: MyAllowSpecificOrigins,
+                              policy =>
+                              {
+                                  policy.WithOrigins("http://localhost:3000");
+                              });
+        });
+
 
         // Add services to the container.
         builder.Services.AddScoped<IToolService, ToolService>();
@@ -17,8 +28,12 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        var app = builder.Build();
 
+        var app = builder.Build();
+        app.UseCors(x => x.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                    );
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
@@ -26,12 +41,12 @@ public class Program
             app.UseSwaggerUI();
         }
 
-
+        app.UseCors(MyAllowSpecificOrigins);
         app.UseHttpsRedirection();
         app.UseAuthorization();
         app.MapControllers();
-
+        app.UseSwagger();
+        app.UseSwaggerUI();
         app.Run();
-
     }
 }

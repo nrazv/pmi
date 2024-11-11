@@ -19,12 +19,14 @@ public class ProjectManager
             .ForMember(dest => dest.LastUpdated, opt => opt.MapFrom(src => src.LastWriteTime))
             .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreationTime));
         }));
+
     }
 
-    public ProjectEntity? createNewProject(string projectName, out string errorMessage)
+    public ProjectEntity? createNewProject(string projectName, out string? errorMessage)
     {
         string newProjectPath = $@"{_projectFolder}/{projectName}";
         errorMessage = null;
+
 
         if (Directory.Exists(newProjectPath))
         {
@@ -33,13 +35,23 @@ public class ProjectManager
         }
 
         DirectoryInfo newProjectFolder = Directory.CreateDirectory(newProjectPath);
+
         return _mapper.Map<ProjectEntity>(newProjectFolder);
     }
 
     public List<ProjectEntity> GetProjects()
     {
-        var projectsDirectory = Directory.GetDirectories(_projectFolder);
+        string[] projectsDirectory;
         var projectsList = new List<ProjectEntity>();
+        try
+        {
+            projectsDirectory = Directory.GetDirectories(_projectFolder);
+        }
+        catch (DirectoryNotFoundException)
+        {
+            return projectsList;
+        }
+
 
         foreach (string project in projectsDirectory)
         {

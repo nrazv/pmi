@@ -12,8 +12,8 @@ public class ToolService : IToolService
         _runner = new ToolRunner();
     }
 
-    public void RunTool(ToolExecutionRequest toolExecution)
+    public string RunTool(ToolExecutionRequest toolExecution)
     {
-        _runner.RunTool(toolExecution);
+        return _runner.RunTool(toolExecution);
     }
 }

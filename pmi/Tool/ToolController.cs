@@ -15,8 +15,8 @@ public class ToolController : ControllerBase
     }
 
     [HttpPost(Name = "Run a tool")]
-    public void StartTool(ToolExecutionRequest toolExecution)
+    public string StartTool(ToolExecutionRequest toolExecution)
     {
-        _toolService.RunTool(toolExecution);
+        return _toolService.RunTool(toolExecution);
     }
 }
