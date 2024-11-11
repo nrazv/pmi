@@ -7,7 +7,6 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Project } from "../shared/Project";
 
 type Props = {
   open: boolean;
@@ -17,7 +16,7 @@ type Props = {
 const apiUrl = process.env.REACT_APP_API_URL;
 
 function NewProjectDialog({ open, close }: Props) {
-  const [name, setName] = useState<string>();
+  const [name, setName] = useState<string>("");
 
   const createProject = () => {
     const requestOptions = {
@@ -28,6 +27,7 @@ function NewProjectDialog({ open, close }: Props) {
         "Access-Control-Allow-Origin": "*",
       },
     };
+
     fetch(`${apiUrl}project/new?projectName=${name}`, requestOptions).then(
       (response) => {
         if (response.status == 200) {

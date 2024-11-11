@@ -1,65 +1,55 @@
 import {
   Box,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  ListSubheader,
+  ListItemIcon,
+  MenuItem,
+  MenuList,
+  Paper,
+  Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+
 import { Project } from "../shared/Project";
+import { apiServiceProvider } from "../services/ApiService";
+import { useQuery } from "@tanstack/react-query";
+import FolderIcon from "@mui/icons-material/Folder";
+import "./HomePage.css";
 
-const apiUrl = process.env.REACT_APP_API_URL;
-
-function HomePage() {
-  const [projects, setProjects] = useState<Project[]>();
-
-  const fetchProjects = () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    };
-
-    fetch(`${apiUrl}project/all`, requestOptions)
-      .then((response) => response.json())
-      .then((response) => {
-        const projects = response as Project[];
-        setProjects(projects);
-      });
-  };
+const HomePage = () => {
+  const apiService = apiServiceProvider();
+  const { error, isLoading, data } = useQuery({
+    queryKey: ["projects"],
+    queryFn: apiService.get<Project[]>("project/all"),
+  });
 
   const listItems = () => {
-    const items = projects?.map((project: Project) => (
-      <ListItem disablePadding key={project.name}>
-        <ListItemButton>
-          <ListItemText primary={project.name} />
-        </ListItemButton>
-      </ListItem>
+    const items = data?.data.map((project: Project) => (
+      <MenuItem sx={{ margin: 1, padding: 1 }} key={project.name}>
+        <ListItemIcon>
+          <FolderIcon fontSize="small" />
+        </ListItemIcon>
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+          {project.name}
+        </Typography>
+      </MenuItem>
     ));
+
     return items;
   };
 
-  useEffect(() => fetchProjects(), []);
-
   return (
-    <Box sx={{ width: "100%" }}>
-      <List
-        color="secondary"
-        sx={{ width: "30%", maxWidth: 200 }}
-        component="nav"
-        subheader={
-          <ListSubheader component="div" id="nested-list-subheader">
-            Projects
-          </ListSubheader>
-        }
-      >
-        {listItems()}
-      </List>
+    <Box
+      className="home-page"
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        height: "-webkit-fill-available",
+      }}
+    >
+      <Box>
+        <MenuList>{listItems()}</MenuList>
+      </Box>
+      <Box sx={{ flexGrow: 1, background: "lightgrey", padding: 1 }}>Box B</Box>
     </Box>
   );
-}
+};
 
 export default HomePage;
