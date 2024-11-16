@@ -4,17 +4,27 @@ import NavBar from "./components/NavBar";
 import HomePage from "./pages/HomePage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Box } from "@mui/system";
-import { Paper } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 function App() {
+  const darkTheme = createTheme({
+    palette: {
+      mode: "dark",
+    },
+  });
+
   const queryClient = new QueryClient();
   return (
     <React.Fragment>
       <QueryClientProvider client={queryClient}>
-        <NavBar />
-        <Box sx={{ marginTop: "64px", height: "90vh" }}>
-          <HomePage />
-        </Box>
+        <ThemeProvider theme={darkTheme}>
+          <CssBaseline />
+          <NavBar />
+          <Box sx={{ height: "90vh" }}>
+            <HomePage />
+          </Box>
+        </ThemeProvider>
       </QueryClientProvider>
     </React.Fragment>
   );

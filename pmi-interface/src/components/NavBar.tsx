@@ -1,12 +1,11 @@
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import ProjectMenu from "./ProjectMenu";
 
 function NavBar() {
   return (
-    <AppBar position="absolute" color="inherit" sx={{ margin: 0, padding: 0 }}>
+    <AppBar position="sticky" color="inherit" sx={{ margin: 0, padding: 0 }}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           PMI
