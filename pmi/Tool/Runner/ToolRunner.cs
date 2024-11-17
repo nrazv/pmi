@@ -12,7 +12,9 @@ public class ToolRunner
             return string.Empty;
         }
 
-        return runTool(toolExecution);
+        var response = runTool(toolExecution);
+
+        return response == null ? string.Empty : response;
     }
 
     private string? runTool(ToolExecutionRequest toolExecution)

@@ -21,4 +21,16 @@
 	  <Folder Include="projects\" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<None Update="pmi.db"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="System.Console" Static="true" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Version="8.0.0" Include="Microsoft.EntityFrameworkCore.Sqlite" />
+	</ItemGroup>
+
 </Project>
