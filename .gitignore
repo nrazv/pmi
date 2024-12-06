@@ -29,3 +29,4 @@ pmi/obj/
 
 # user
 pmi/*.user
+pmi/db/pmi.db
