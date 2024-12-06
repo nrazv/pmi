@@ -23,15 +23,26 @@ public class ProjectService : IProjectService
 
     public List<ProjectDto> GetProjects()
     {
-        var projects = _projectManager.GetProjects();
-        var dbProject = _pmiDb.Projects?.ToHashSet();
-
-        return _mapper.Map<List<ProjectDto>>(dbProject);
+        var projects = _pmiDb.Projects?.ToHashSet();
+        return _mapper.Map<List<ProjectDto>>(projects);
     }
 
-    public (ProjectDto?, string? errorMessage) NewProject(string projectName)
+    public (ProjectDto?, string? errorMessage) NewProject(CreateProjectDto p)
     {
-        var project = _projectManager.createNewProject(projectName, out string? errorMessage);
+        Guid uuid = Guid.NewGuid();
+
+
+        ProjectEntity newProject = new(
+                id: uuid.ToString(),
+                name: p.Name,
+                createdDate: DateTime.Now,
+                domainName: p.DomainName ?? string.Empty,
+                lastUpdated: DateTime.Now,
+                ipAddress: p.IpAddress
+                );
+        _pmiDb.Add(newProject);
+        _pmiDb.SaveChanges();
+        var project = _projectManager.createNewProject(p.Name, out string? errorMessage);
 
         return (_mapper.Map<ProjectDto>(project), errorMessage);
     }

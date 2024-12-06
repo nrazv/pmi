@@ -15,18 +15,21 @@ public class ProjectController : ControllerBase
         _projectService = projectService;
     }
 
+
     [HttpPost("new", Name = "New Project")]
     [ProducesResponseType<ProjectDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult NewProject(string projectName)
+    public IActionResult NewProject(CreateProjectDto project)
     {
-        var (project, errorMessage) = _projectService.NewProject(projectName);
+
+        var (createdProject, errorMessage) = _projectService.NewProject(project);
         if (errorMessage is null)
         {
-            return Ok(project);
+            return Ok(createdProject);
         }
         return BadRequest(errorMessage);
     }
+
 
     [HttpGet("all", Name = "Get all projects")]
     public List<ProjectDto> GetAll()
