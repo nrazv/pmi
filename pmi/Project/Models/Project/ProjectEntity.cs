@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace pmi.Project.Models;
 
 
+[Index(nameof(Name), IsUnique = true)]
 public class ProjectEntity
 {
     [Key]

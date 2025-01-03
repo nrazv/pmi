@@ -26,6 +26,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Content Include="./db/pmi.db">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<Using Include="System.Console" Static="true" />
 	</ItemGroup>
 	

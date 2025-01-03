@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using pmi.DataContext;
 using pmi.Project.Models;
 
@@ -29,6 +31,7 @@ public class ProjectService : IProjectService
 
     public (ProjectDto?, string? errorMessage) NewProject(CreateProjectDto p)
     {
+
         Guid uuid = Guid.NewGuid();
 
 
@@ -40,10 +43,22 @@ public class ProjectService : IProjectService
                 lastUpdated: DateTime.Now,
                 ipAddress: p.IpAddress
                 );
-        _pmiDb.Add(newProject);
-        _pmiDb.SaveChanges();
-        var project = _projectManager.createNewProject(p.Name, out string? errorMessage);
 
+        try
+        {
+
+            _pmiDb.Add(newProject);
+            _pmiDb.SaveChanges();
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is SqliteException sqliteEx && sqliteEx.SqliteErrorCode == 19)
+        {
+            return (null, "Project exists");
+        }
+
+
+
+        var project = _projectManager.createNewProject(p.Name, out string? errorMessage);
         return (_mapper.Map<ProjectDto>(project), errorMessage);
     }
+
 }
