@@ -4,8 +4,9 @@ import { Project } from "../shared/Project";
 import { apiServiceProvider } from "../services/ApiService";
 import { useQuery } from "@tanstack/react-query";
 import "./HomePage.css";
-import TargetBar from "../components/target-bar/TargetBar";
+import ProjectToolBar from "../components/target-bar/ProjectToolBar";
 import ProjectList from "../components/project/ProjectList";
+import ProjectTabs from "../components/project/ProjectTabs";
 
 const HomePage = () => {
   const apiService = apiServiceProvider();
@@ -29,7 +30,8 @@ const HomePage = () => {
       <ProjectList projects={projects} />
 
       <Box sx={{ flexGrow: 1, backgroundColor: "#eceff1" }}>
-        <TargetBar />
+        <ProjectToolBar />
+        <ProjectTabs />
       </Box>
     </Box>
   );

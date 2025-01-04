@@ -18,13 +18,11 @@ function App() {
   return (
     <React.Fragment>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={darkTheme}>
-          <CssBaseline />
-          <NavBar />
-          <Box sx={{ height: "90vh" }}>
-            <HomePage />
-          </Box>
-        </ThemeProvider>
+        <CssBaseline />
+        <NavBar />
+        <Box sx={{ height: "90vh" }}>
+          <HomePage />
+        </Box>
       </QueryClientProvider>
     </React.Fragment>
   );
