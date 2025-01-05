@@ -23,12 +23,10 @@ function ProjectList({ projects, selectProject }: Props) {
 
   useEffect(() => {
     selectProject(projects[0]);
-    console.log("Selected", projects[0]);
-    console.log("Projects:", projects);
   }, []);
 
   const listItems = () => {
-    const items = projects.map((project: Project, index) => (
+    const items = projects?.map((project: Project, index) => (
       <ListItemButton
         divider
         selected={selectedIndex === index}

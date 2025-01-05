@@ -6,24 +6,16 @@ import { useQuery } from "@tanstack/react-query";
 import "./HomePage.css";
 import ProjectToolBar from "../components/target-bar/ProjectToolBar";
 import ProjectList from "../components/project/ProjectList";
-import ProjectTabs from "../components/project/ProjectTabs";
 import { useEffect, useState } from "react";
+import ProjectTabs from "../components/project/ProjectTabs";
 
 const HomePage = () => {
   const [selectedProject, setSelectedProject] = useState<Project>();
   const apiService = apiServiceProvider();
-  const projects: Project[] = [];
-
   const { error, isLoading, data } = useQuery({
     queryKey: ["projects"],
     queryFn: apiService.get<Project[]>("project/all"),
   });
-
-  useEffect(() => {
-    console.log(selectedProject);
-  }, [selectedProject]);
-
-  data?.data.map((p) => projects.push(p));
 
   return (
     <Box
@@ -33,9 +25,12 @@ const HomePage = () => {
         height: "-webkit-fill-available",
       }}
     >
-      <ProjectList selectProject={setSelectedProject} projects={projects} />
+      {data && (
+        <ProjectList selectProject={setSelectedProject} projects={data?.data} />
+      )}
+
       <Box sx={{ flexGrow: 1, backgroundColor: "#eceff1" }}>
-        <ProjectToolBar />
+        <ProjectToolBar project={selectedProject} />
         <ProjectTabs />
       </Box>
     </Box>

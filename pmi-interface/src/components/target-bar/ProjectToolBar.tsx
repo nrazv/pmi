@@ -1,13 +1,16 @@
 import { IconButton, Toolbar, Typography } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { grey } from "@mui/material/colors";
-import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
+import { Project } from "../../shared/Project";
 
-function ProjectToolBar() {
+type Props = {
+  project?: Project;
+};
+
+function ProjectToolBar({ project }: Props) {
   return (
     <Toolbar variant="dense">
       <Typography variant="h6" component="div" color="black">
-        Project 5
+        {project?.name}
       </Typography>
 
       <IconButton
