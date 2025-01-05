@@ -7,16 +7,22 @@ import "./HomePage.css";
 import ProjectToolBar from "../components/target-bar/ProjectToolBar";
 import ProjectList from "../components/project/ProjectList";
 import ProjectTabs from "../components/project/ProjectTabs";
+import { useEffect, useState } from "react";
 
 const HomePage = () => {
+  const [selectedProject, setSelectedProject] = useState<Project>();
   const apiService = apiServiceProvider();
+  const projects: Project[] = [];
 
   const { error, isLoading, data } = useQuery({
     queryKey: ["projects"],
     queryFn: apiService.get<Project[]>("project/all"),
   });
 
-  const projects: Project[] = [];
+  useEffect(() => {
+    console.log(selectedProject);
+  }, [selectedProject]);
+
   data?.data.map((p) => projects.push(p));
 
   return (
@@ -27,8 +33,7 @@ const HomePage = () => {
         height: "-webkit-fill-available",
       }}
     >
-      <ProjectList projects={projects} />
-
+      <ProjectList selectProject={setSelectedProject} projects={projects} />
       <Box sx={{ flexGrow: 1, backgroundColor: "#eceff1" }}>
         <ProjectToolBar />
         <ProjectTabs />

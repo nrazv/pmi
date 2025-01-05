@@ -1,7 +1,7 @@
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import ProjectMenu from "./ProjectMenu";
+import ProjectMenu from "../project/ProjectMenu";
 
 function NavBar() {
   return (

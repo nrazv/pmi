@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Project } from "../../shared/Project";
 import {
   Box,
@@ -11,22 +11,28 @@ import FolderIcon from "@mui/icons-material/Folder";
 
 export type Props = {
   projects: Project[];
+  selectProject: (project: Project) => void;
 };
 
-function ProjectList(props: Props) {
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
-  const handleListItemClick = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    index: number
-  ) => {
+function ProjectList({ projects, selectProject }: Props) {
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const handleListItemClick = (index: number, project: Project) => {
     setSelectedIndex(index);
+    selectProject(project);
   };
 
+  useEffect(() => {
+    selectProject(projects[0]);
+    console.log("Selected", projects[0]);
+    console.log("Projects:", projects);
+  }, []);
+
   const listItems = () => {
-    const items = props.projects.map((project: Project, index) => (
+    const items = projects.map((project: Project, index) => (
       <ListItemButton
+        divider
         selected={selectedIndex === index}
-        onClick={(event) => handleListItemClick(event, index)}
+        onClick={() => handleListItemClick(index, project)}
         sx={{ margin: 1, padding: 1 }}
         key={project.name}
       >
