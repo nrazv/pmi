@@ -1,6 +1,7 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import React from "react";
-import TabPanelProps from "./tabs/TabPanelProps";
+import TabPanelProps from "./TabPanelProps";
+import { Project } from "../../../models/Project";
 
 function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -18,7 +19,11 @@ function CustomTabPanel(props: TabPanelProps) {
   );
 }
 
-function ProjectTabs() {
+type ProjectTabsProps = {
+  project: Project;
+};
+
+function ProjectTabs({ project }: ProjectTabsProps) {
   const [tabIndex, setTabIndex] = React.useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);

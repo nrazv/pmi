@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Project } from "../../shared/Project";
+import { Project } from "../../models/Project";
 import {
   Box,
   List,

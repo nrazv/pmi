@@ -1,4 +1,3 @@
-import React from "react";
 import TabPanelProps from "./TabPanelProps";
 import { Box } from "@mui/material";
 

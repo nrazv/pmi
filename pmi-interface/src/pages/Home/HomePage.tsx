@@ -1,13 +1,13 @@
 import { Box } from "@mui/material";
 
-import { Project } from "../shared/Project";
-import { apiServiceProvider } from "../services/ApiService";
 import { useQuery } from "@tanstack/react-query";
 import "./HomePage.css";
-import ProjectToolBar from "../components/target-bar/ProjectToolBar";
-import ProjectList from "../components/project/ProjectList";
-import { useEffect, useState } from "react";
-import ProjectTabs from "../components/project/ProjectTabs";
+import { useState } from "react";
+import { apiServiceProvider } from "../../services/ApiService";
+import { Project } from "../../models/Project";
+import ProjectList from "../../components/project/ProjectList";
+import ProjectToolBar from "../../components/target-bar/ProjectToolBar";
+import ProjectTabs from "../../components/project/tabs/ProjectTabs";
 
 const HomePage = () => {
   const [selectedProject, setSelectedProject] = useState<Project>();
@@ -31,7 +31,7 @@ const HomePage = () => {
 
       <Box sx={{ flexGrow: 1, backgroundColor: "#eceff1" }}>
         <ProjectToolBar project={selectedProject} />
-        <ProjectTabs />
+        {selectedProject && <ProjectTabs project={selectedProject} />}
       </Box>
     </Box>
   );

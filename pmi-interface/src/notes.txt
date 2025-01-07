@@ -1,0 +1,15 @@
+src/
+├── models/           # Directory for TypeScript models
+│   ├── index.ts      # Barrel file for exporting all models
+│   ├── User.ts       # Model for User
+│   ├── Product.ts    # Model for Product
+│   ├── Order.ts      # Model for Order
+│   └── ...           # Additional models
+├── components/       # React components
+├── hooks/            # Custom React hooks
+├── services/         # API calls and services
+├── utils/            # Utility functions
+├── styles/           # Styling (CSS/SCSS/Styled Components)
+├── types/            # Shared or global types
+├── App.tsx           # Main React component
+└── index.tsx         # Main entry point
