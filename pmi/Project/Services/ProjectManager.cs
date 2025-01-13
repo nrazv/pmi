@@ -15,9 +15,7 @@ public class ProjectManager
         {
             conf.CreateMap<DirectoryInfo, ProjectEntity>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.GetHashCode()))
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.LastUpdated, opt => opt.MapFrom(src => src.LastWriteTime))
-            .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreationTime));
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
         }));
 
     }

@@ -9,33 +9,28 @@ public class ProjectEntity
 {
     [Key]
     public string Id { get; init; } = null!;
+    public ProjectInfo ProjectInfo { get; init; } = null!;
     public string Name { get; init; } = null!;
     public string? DomainName { get; set; }
     public string? IpAddress { get; set; }
-    public DateTime CreatedDate { get; init; }
-    public DateTime? LastUpdated { get; init; }
     public List<ExecutedToolEntity> ExecutedTools { get; set; } = new();
 
 
-    public ProjectEntity(string id, string name, DateTime createdDate,
-                            DateTime? lastUpdated, string domainName, string? ipAddress)
+    public ProjectEntity(string id, string name, string domainName, string? ipAddress, ProjectInfo projectInfo)
     {
         Id = id;
         Name = name;
-        CreatedDate = createdDate;
-        LastUpdated = lastUpdated;
         DomainName = domainName;
         IpAddress = ipAddress;
+        ProjectInfo = projectInfo;
     }
 
     public ProjectEntity() { }
 
     public void Deconstruct(
         out string id,
-        out string name,
-        out DateTime createdDate,
-        out DateTime? lastUpdated
-     ) => (id, name, createdDate, lastUpdated) = (Id, Name, CreatedDate, LastUpdated);
+        out string name
+     ) => (id, name) = (Id, Name);
 }
 
 

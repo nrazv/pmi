@@ -32,18 +32,21 @@ public class ProjectService : IProjectService
     public (ProjectDto?, string? errorMessage) NewProject(CreateProjectDto p)
     {
 
-        Guid uuid = Guid.NewGuid();
-
+        ProjectInfo projectInfo = new(
+            id: Guid.NewGuid().ToString(),
+            projectName: p.Name,
+            createdDate: DateTime.Now,
+            lastUpdated: DateTime.Now,
+            status: ProjectStatus.NotStarted
+            );
 
         ProjectEntity newProject = new(
-                id: uuid.ToString(),
+               id: Guid.NewGuid().ToString(),
                 name: p.Name,
-                createdDate: DateTime.Now,
                 domainName: p.DomainName ?? string.Empty,
-                lastUpdated: DateTime.Now,
-                ipAddress: p.IpAddress
+                ipAddress: p.IpAddress,
+                projectInfo: projectInfo
                 );
-
         try
         {
 
