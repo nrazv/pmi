@@ -1,18 +1,20 @@
-create table Projects(
-    Id varchar(255) PRIMARY KEY,
-    Name varchar(255) unique not null,
-    DomainName varchar(255),
-    IpAddress varchar(255),
-    CreatedDate DATETIME not null,
-    LastUpdated DATETIME
+CREATE TABLE ProjectsInfo (
+    Id          TEXT NOT NULL CONSTRAINT PK_ProjectsInfo PRIMARY KEY,
+    Name        TEXT NOT NULL,
+    CreatedDate TEXT NOT NULL,
+    LastUpdated TEXT,
+    Status      TEXT NOT NULL
 );
 
 
-create table ExecutedTools(
-    Id varchar(255) PRIMARY KEY,
-    Name varchar(255) not null,
-    ExecutionResult text,
-    ExecutedDate DATETIME,
-    ProjectId varchar(255),
-    FOREIGN KEY(ProjectId) REFERENCES Projects(Id)
+
+CREATE TABLE Projects (
+    Id            TEXT NOT NULL CONSTRAINT PK_Projects PRIMARY KEY,
+    Name          TEXT NOT NULL,
+    DomainName    TEXT,
+    IpAddress     TEXT,
+    ProjectInfoId TEXT,
+    CONSTRAINT FK_Projects_ProjectsInfo_ProjectInfoId FOREIGN KEY (ProjectInfoId)
+    REFERENCES ProjectsInfo (Id) 
 );
+

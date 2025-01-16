@@ -25,40 +25,68 @@ public class ProjectService : IProjectService
 
     public List<ProjectDto> GetProjects()
     {
-        var projects = _pmiDb.Projects?.ToHashSet();
+        var projects = _pmiDb.Projects?.Include(p => p.ProjectInfo).ToHashSet();
         return _mapper.Map<List<ProjectDto>>(projects);
     }
 
     public (ProjectDto?, string? errorMessage) NewProject(CreateProjectDto p)
     {
+        var newProjectEntity = createNewProjectEntity(p);
+        _projectManager.createNewProjectDirectory(newProjectEntity.Name, out string? errorMessage);
 
-        Guid uuid = Guid.NewGuid();
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            return (null, errorMessage);
+        }
 
+        var (savedProject, error) = saveProjectToDatabase(newProjectEntity);
+        if (string.IsNullOrEmpty(error) || savedProject is null)
+        {
+            return (null, error);
+        }
 
-        ProjectEntity newProject = new(
-                id: uuid.ToString(),
-                name: p.Name,
-                createdDate: DateTime.Now,
-                domainName: p.DomainName ?? string.Empty,
-                lastUpdated: DateTime.Now,
-                ipAddress: p.IpAddress
-                );
+        return (_mapper.Map<ProjectDto>(savedProject), errorMessage);
+    }
+
+    private (ProjectEntity?, string? errorMessage) saveProjectToDatabase(ProjectEntity newProject)
+    {
 
         try
         {
-
-            _pmiDb.Add(newProject);
+            _pmiDb.Projects.Add(newProject);
             _pmiDb.SaveChanges();
+
         }
         catch (DbUpdateException ex) when (ex.InnerException is SqliteException sqliteEx && sqliteEx.SqliteErrorCode == 19)
         {
+            _pmiDb.Remove(newProject);
+            _pmiDb.SaveChanges();
             return (null, "Project exists");
         }
 
-
-
-        var project = _projectManager.createNewProject(p.Name, out string? errorMessage);
-        return (_mapper.Map<ProjectDto>(project), errorMessage);
+        var savedProject = _pmiDb.Projects?.OrderBy(p => p.Id).First();
+        return (savedProject, null);
     }
 
+
+    private ProjectEntity createNewProjectEntity(CreateProjectDto p)
+    {
+        var projectId = Guid.NewGuid().ToString();
+
+        ProjectInfo projectInfo = new(
+            id: Guid.NewGuid().ToString(),
+            name: p.Name,
+            createdDate: DateTime.Now,
+            lastUpdated: DateTime.Now,
+            status: ProjectStatus.NotStarted
+            );
+
+        return new(
+                id: projectId,
+                name: p.Name,
+                domainName: p.DomainName ?? string.Empty,
+                ipAddress: p.IpAddress,
+                projectInfo: projectInfo
+                );
+    }
 }
