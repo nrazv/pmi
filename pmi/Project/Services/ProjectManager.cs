@@ -20,7 +20,7 @@ public class ProjectManager
 
     }
 
-    public ProjectEntity? createNewProject(string projectName, out string? errorMessage)
+    public ProjectEntity? createNewProjectDirectory(string projectName, out string? errorMessage)
     {
         string newProjectPath = $@"{_projectFolder}/{projectName}";
         errorMessage = null;

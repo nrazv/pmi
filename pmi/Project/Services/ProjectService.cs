@@ -25,43 +25,68 @@ public class ProjectService : IProjectService
 
     public List<ProjectDto> GetProjects()
     {
-        var projects = _pmiDb.Projects?.ToHashSet();
+        var projects = _pmiDb.Projects?.Include(p => p.ProjectInfo).ToHashSet();
         return _mapper.Map<List<ProjectDto>>(projects);
     }
 
     public (ProjectDto?, string? errorMessage) NewProject(CreateProjectDto p)
     {
+        var newProjectEntity = createNewProjectEntity(p);
+        _projectManager.createNewProjectDirectory(newProjectEntity.Name, out string? errorMessage);
+
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            return (null, errorMessage);
+        }
+
+        var (savedProject, error) = saveProjectToDatabase(newProjectEntity);
+        if (string.IsNullOrEmpty(error) || savedProject is null)
+        {
+            return (null, error);
+        }
+
+        return (_mapper.Map<ProjectDto>(savedProject), errorMessage);
+    }
+
+    private (ProjectEntity?, string? errorMessage) saveProjectToDatabase(ProjectEntity newProject)
+    {
+
+        try
+        {
+            _pmiDb.Projects.Add(newProject);
+            _pmiDb.SaveChanges();
+
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is SqliteException sqliteEx && sqliteEx.SqliteErrorCode == 19)
+        {
+            _pmiDb.Remove(newProject);
+            _pmiDb.SaveChanges();
+            return (null, "Project exists");
+        }
+
+        var savedProject = _pmiDb.Projects?.OrderBy(p => p.Id).First();
+        return (savedProject, null);
+    }
+
+
+    private ProjectEntity createNewProjectEntity(CreateProjectDto p)
+    {
+        var projectId = Guid.NewGuid().ToString();
 
         ProjectInfo projectInfo = new(
             id: Guid.NewGuid().ToString(),
-            projectName: p.Name,
+            name: p.Name,
             createdDate: DateTime.Now,
             lastUpdated: DateTime.Now,
             status: ProjectStatus.NotStarted
             );
 
-        ProjectEntity newProject = new(
-               id: Guid.NewGuid().ToString(),
+        return new(
+                id: projectId,
                 name: p.Name,
                 domainName: p.DomainName ?? string.Empty,
                 ipAddress: p.IpAddress,
                 projectInfo: projectInfo
                 );
-        try
-        {
-
-            _pmiDb.Add(newProject);
-            _pmiDb.SaveChanges();
-        }
-        catch (DbUpdateException ex) when (ex.InnerException is SqliteException sqliteEx && sqliteEx.SqliteErrorCode == 19)
-        {
-            return (null, "Project exists");
-        }
-
-
-
-        var project = _projectManager.createNewProject(p.Name, out string? errorMessage);
-        return (_mapper.Map<ProjectDto>(project), errorMessage);
     }
-
 }

@@ -9,12 +9,13 @@ public class ProjectEntity
 {
     [Key]
     public string Id { get; init; } = null!;
-    public ProjectInfo ProjectInfo { get; init; } = null!;
     public string Name { get; init; } = null!;
     public string? DomainName { get; set; }
     public string? IpAddress { get; set; }
-    public List<ExecutedToolEntity> ExecutedTools { get; set; } = new();
+    public ProjectInfo ProjectInfo { get; set; } = null!;
 
+
+    public ProjectEntity() { }
 
     public ProjectEntity(string id, string name, string domainName, string? ipAddress, ProjectInfo projectInfo)
     {
@@ -24,9 +25,6 @@ public class ProjectEntity
         IpAddress = ipAddress;
         ProjectInfo = projectInfo;
     }
-
-    public ProjectEntity() { }
-
     public void Deconstruct(
         out string id,
         out string name

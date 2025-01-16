@@ -1,22 +1,33 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace pmi.Project.Models;
 
 public class ProjectInfo
 {
     [Key]
-    public string Id { get; init; } = null!;
-    public string ProjectName { get; init; } = null!;
+    public string Id { get; set; } = null!;
+
+    [Required]
+    public string Name { get; init; } = null!;
+
     public DateTime CreatedDate { get; init; }
+
     public DateTime? LastUpdated { get; init; }
+
+    [Required]
     public ProjectStatus Status { get; set; }
 
-    public ProjectInfo(string id, string projectName, DateTime createdDate, DateTime? lastUpdated, ProjectStatus status)
+
+    public ProjectInfo() { }
+    public ProjectInfo(string id, string name, DateTime createdDate, DateTime? lastUpdated, ProjectStatus status)
     {
         Id = id;
-        ProjectName = projectName;
+        Name = name;
         CreatedDate = createdDate;
         LastUpdated = lastUpdated;
         Status = status;
     }
+
+
 }

@@ -11,15 +11,21 @@
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="13.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1"/>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.1">
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		  <PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<!-- <ItemGroup>
 	  <Folder Include="Controllers\" />
 	  <Folder Include="Models\" />
 	  <Folder Include="projects\" />
-	</ItemGroup>
+	</ItemGroup> -->
 
 	<ItemGroup>
 		<None Update="pmi.db"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></None>
@@ -37,7 +43,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Version="8.0.0" Include="Microsoft.EntityFrameworkCore.Sqlite" />
+		<PackageReference Version="9.0.1" Include="Microsoft.EntityFrameworkCore.Sqlite" />
 	</ItemGroup>
 
 </Project>

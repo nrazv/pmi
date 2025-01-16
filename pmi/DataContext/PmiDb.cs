@@ -6,7 +6,9 @@ namespace pmi.DataContext;
 
 public class PmiDb : DbContext
 {
-    public DbSet<ProjectEntity>? Projects { get; set; }
+    public DbSet<ProjectEntity> Projects { get; set; }
+    public DbSet<ProjectInfo> ProjectsInfo { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -17,4 +19,14 @@ public class PmiDb : DbContext
         optionsBuilder.UseSqlite(connectionString);
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder
+           .Entity<ProjectInfo>()
+           .Property(e => e.Status)
+           .HasConversion(
+            v => v.ToString(),
+            v => (ProjectStatus)Enum.Parse(typeof(ProjectStatus), v)
+       );
+    }
 }
