@@ -19,6 +19,10 @@ public class ProjectService : IProjectService
         _pmiDb = new PmiDb();
         _mapper = new Mapper(new MapperConfiguration(conf =>
         {
+            conf.CreateMap<ProjectInfo, ProjectInfoDto>()
+            .ForMember(dest => dest.Status,
+                opt => opt.MapFrom(src => src.Status.ToString()));
+
             conf.CreateMap<ProjectEntity, ProjectDto>();
         }));
     }
@@ -40,7 +44,7 @@ public class ProjectService : IProjectService
         }
 
         var (savedProject, error) = saveProjectToDatabase(newProjectEntity);
-        if (string.IsNullOrEmpty(error) || savedProject is null)
+        if (error is not null)
         {
             return (null, error);
         }
@@ -55,7 +59,6 @@ public class ProjectService : IProjectService
         {
             _pmiDb.Projects.Add(newProject);
             _pmiDb.SaveChanges();
-
         }
         catch (DbUpdateException ex) when (ex.InnerException is SqliteException sqliteEx && sqliteEx.SqliteErrorCode == 19)
         {
@@ -64,7 +67,8 @@ public class ProjectService : IProjectService
             return (null, "Project exists");
         }
 
-        var savedProject = _pmiDb.Projects?.OrderBy(p => p.Id).First();
+        var savedProject = _pmiDb.Projects?.Where(p => p.Name == newProject.Name).
+                            Include(p => p.ProjectInfo).FirstOrDefault();
         return (savedProject, null);
     }
 
