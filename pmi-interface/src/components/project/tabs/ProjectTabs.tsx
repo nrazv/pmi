@@ -1,23 +1,8 @@
-import { Box, Tab, Tabs } from "@mui/material";
+import { Tab, Tabs } from "@mui/material";
 import React from "react";
-import TabPanelProps from "./TabPanelProps";
 import { Project } from "../../../models/Project";
-
-function CustomTabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
+import CustomTabPanel from "./ProjectInfoTab";
+import ProjectInfoPanel from "../panel-tabs/ProjectInfoPanel";
 
 type ProjectTabsProps = {
   project: Project;
@@ -31,24 +16,16 @@ function ProjectTabs({ project }: ProjectTabsProps) {
 
   return (
     <>
-      <Tabs
-        indicatorColor="secondary"
-        value={tabIndex}
-        onChange={handleChange}
-        aria-label="basic tabs example"
-      >
+      <Tabs indicatorColor="secondary" value={tabIndex} onChange={handleChange}>
         <Tab label="Project Info" id="info-tab" />
         <Tab label="Item Two" id="item-tab" />
         <Tab label="Item Three" id="info-tab-2" />
       </Tabs>
       <CustomTabPanel value={tabIndex} index={0}>
-        Item One Test
+        <ProjectInfoPanel projectInfo={project.projectInfo} />
       </CustomTabPanel>
       <CustomTabPanel value={tabIndex} index={1}>
-        Item Two
-      </CustomTabPanel>
-      <CustomTabPanel value={tabIndex} index={2}>
-        Item Three
+        Demo tab
       </CustomTabPanel>
     </>
   );

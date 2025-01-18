@@ -32,7 +32,7 @@ function NewProjectDialog({ open, close }: Props) {
     };
 
     fetch(`${apiUrl}project/new`, requestOptions).then((response) => {
-      if (response.status == 200) {
+      if (response.status === 200) {
         close?.();
       }
     });

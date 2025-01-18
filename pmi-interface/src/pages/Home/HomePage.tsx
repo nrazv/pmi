@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import "./HomePage.css";
 import { useState } from "react";
-import { apiServiceProvider } from "../../services/ApiService";
+import { fetchAllProjects } from "../../services/ApiService";
 import { Project } from "../../models/Project";
 import ProjectList from "../../components/project/ProjectList";
 import ProjectToolBar from "../../components/target-bar/ProjectToolBar";
@@ -11,10 +11,9 @@ import ProjectTabs from "../../components/project/tabs/ProjectTabs";
 
 const HomePage = () => {
   const [selectedProject, setSelectedProject] = useState<Project>();
-  const apiService = apiServiceProvider();
   const { error, isLoading, data } = useQuery({
     queryKey: ["projects"],
-    queryFn: apiService.get<Project[]>("project/all"),
+    queryFn: fetchAllProjects,
   });
 
   return (
@@ -26,7 +25,7 @@ const HomePage = () => {
       }}
     >
       {data && (
-        <ProjectList selectProject={setSelectedProject} projects={data?.data} />
+        <ProjectList selectProject={setSelectedProject} projects={data} />
       )}
 
       <Box sx={{ flexGrow: 1, backgroundColor: "#eceff1" }}>

@@ -1,3 +1,4 @@
+import { Project } from "../models/Project";
 import axiosInstance from "./axios";
 
 class ApiService {
@@ -19,3 +20,8 @@ class ApiService {
 export function apiServiceProvider() {
   return new ApiService();
 }
+
+export const fetchAllProjects = async (): Promise<Project[]> => {
+  const response = await axiosInstance.get<Project[]>("project/all");
+  return response.data;
+};
