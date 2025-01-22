@@ -2,7 +2,8 @@
 {
     public class ToolExecutionRequest
     {
-        public string? ToolName { get; set; }
-        public string? ToolCommand { get; set; }
+        public string Target { get; set; }
+        public string Tool { get; set; }
+        public string Arguments { get; set; }
     }
 }

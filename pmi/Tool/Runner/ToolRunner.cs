@@ -22,8 +22,8 @@ public class ToolRunner
         string output = string.Empty;
         // Set up the process to run the nmap command
         Process process = new Process();
-        process.StartInfo.FileName = "nmap";           // Command to run
-        process.StartInfo.Arguments = "--version";     // Arguments for the command
+        process.StartInfo.FileName = toolExecution.Tool;           // Command to run
+        process.StartInfo.Arguments = $"{toolExecution.Target}  {toolExecution.Arguments}";     // Arguments for the command
 
         // Configure the process to redirect output, so we can capture it
         process.StartInfo.RedirectStandardOutput = true;
