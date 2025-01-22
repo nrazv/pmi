@@ -5,7 +5,7 @@ using pmi.Tool.Services;
 
 namespace pmi.Tool;
 [ApiController]
-[Route("tool")]
+[Route("api/tool")]
 public class ToolController : ControllerBase
 {
     private IToolService _toolService;
