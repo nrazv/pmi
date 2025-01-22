@@ -9,7 +9,7 @@ type Props = {
 function ProjectToolBar({ project }: Props) {
   return (
     <Toolbar variant="dense">
-      <Typography variant="h6" component="div" color="black">
+      <Typography variant="h5" component="div" color="black">
         {project?.name}
       </Typography>
 

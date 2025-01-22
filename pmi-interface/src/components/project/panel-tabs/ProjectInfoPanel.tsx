@@ -12,13 +12,7 @@ function ProjectInfoPanel({ projectInfo }: ProjectInfoPanelProps) {
   return (
     <>
       <div className="flex">
-        <Typography
-          sx={{ fontWeight: "bold" }}
-          className="pr-4"
-          align="left"
-          variant="h5"
-          gutterBottom
-        >
+        <Typography className="pr-4" align="left" variant="h6" gutterBottom>
           Name:
         </Typography>
         <Typography variant="h6" gutterBottom>
@@ -26,13 +20,7 @@ function ProjectInfoPanel({ projectInfo }: ProjectInfoPanelProps) {
         </Typography>
       </div>
       <div className="flex">
-        <Typography
-          sx={{ fontWeight: "bold" }}
-          className="pr-4"
-          align="left"
-          variant="h5"
-          gutterBottom
-        >
+        <Typography className="pr-6" align="left" variant="h6" gutterBottom>
           Created Date:
         </Typography>
         <Typography variant="h6" gutterBottom>
@@ -40,13 +28,7 @@ function ProjectInfoPanel({ projectInfo }: ProjectInfoPanelProps) {
         </Typography>
       </div>
       <div className="flex">
-        <Typography
-          sx={{ fontWeight: "bold" }}
-          className="pr-4"
-          align="left"
-          variant="h5"
-          gutterBottom
-        >
+        <Typography className="pr-4" align="left" variant="h6" gutterBottom>
           Last Update:
         </Typography>
         <Typography variant="h6" gutterBottom>
