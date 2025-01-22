@@ -11,9 +11,10 @@ type Props = {
   values: string[];
   handleChange: (event: SelectChangeEvent) => void;
   selected: string;
+  label?: string;
 };
 
-function SelectTarget({ values, handleChange, selected }: Props) {
+function SelectTarget({ values, handleChange, selected, label }: Props) {
   const menuItems = values.map((e: string, i: number) => (
     <MenuItem value={e} key={i}>
       {e}
@@ -22,7 +23,7 @@ function SelectTarget({ values, handleChange, selected }: Props) {
   return (
     <Box sx={{ minWidth: 100 }}>
       <FormControl fullWidth>
-        <InputLabel>Target</InputLabel>
+        <InputLabel>{label ?? "Target"}</InputLabel>
         <Select value={selected} label="Target" onChange={handleChange}>
           {menuItems}
         </Select>

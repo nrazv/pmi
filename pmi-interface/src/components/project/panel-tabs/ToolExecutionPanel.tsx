@@ -2,6 +2,7 @@ import { FormControl, SelectChangeEvent } from "@mui/material";
 import SelectTarget from "../../SelectTarget";
 import React from "react";
 import { Project } from "../../../models/Project";
+import ToolRunner from "../../ToolRunner";
 
 type Props = {
   project: Project;
@@ -17,12 +18,13 @@ function ToolExecutionPanel({ project }: Props) {
 
   return (
     <div>
-      <FormControl>
+      <FormControl sx={{ display: "flex", flexDirection: "row" }}>
         <SelectTarget
           handleChange={handleChange}
           values={targets}
           selected={target}
         />
+        <ToolRunner />
       </FormControl>
     </div>
   );
