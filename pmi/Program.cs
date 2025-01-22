@@ -1,4 +1,5 @@
 
+using pmi.DataContext;
 using pmi.Project.Services;
 using pmi.Tool.Services;
 
@@ -23,6 +24,7 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddScoped<IToolService, ToolService>();
+        builder.Services.AddScoped<ToolsDataJSON>();
         builder.Services.AddScoped<IProjectService, ProjectService>();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();

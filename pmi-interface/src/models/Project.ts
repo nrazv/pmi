@@ -3,7 +3,7 @@ import { ProjectInfo } from "./ProjectInfo";
 export type Project = {
   id: string;
   name: string;
-  createdDate: Date;
-  lastUpdated?: Date;
+  domainName: string;
+  ipAddress: string;
   projectInfo: ProjectInfo;
 };
