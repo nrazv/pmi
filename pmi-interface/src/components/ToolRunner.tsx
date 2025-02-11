@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { InstalledTool } from "../models/InstalledTool";
+import React, { useEffect } from "react";
 import { fetchInstalledTools } from "../services/ApiService";
 import {
   Button,
@@ -7,14 +6,26 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import SelectTarget from "./SelectTarget";
+import CustomSelectMenu from "./SelectTarget";
 
-function ToolRunner() {
-  const [installedTools, setInstalledTools] = useState<string[]>([]);
-  const [target, setTarget] = React.useState<string>("");
-  const handleChange = (event: SelectChangeEvent) => {
-    setTarget(event.target.value as string);
-  };
+type Props = {
+  handleToolChange: (event: SelectChangeEvent) => void;
+  handleToolArgumentsChange: (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => void;
+  handelClickButton: () => void;
+  toolToExecute: string;
+  toolArguments: string;
+};
+
+function ToolRunner({
+  toolToExecute,
+  toolArguments,
+  handleToolChange,
+  handelClickButton,
+  handleToolArgumentsChange,
+}: Props) {
+  const [installedTools, setInstalledTools] = React.useState<string[]>([]);
 
   useEffect(() => {
     fetchInstalledTools().then((data) => {
@@ -25,18 +36,23 @@ function ToolRunner() {
 
   return (
     <FormControl sx={{ marginLeft: 2, display: "flex", flexDirection: "row" }}>
-      <SelectTarget
-        handleChange={handleChange}
-        values={installedTools}
-        selected={target}
+      <CustomSelectMenu
+        handleSelectionChange={handleToolChange}
+        menuItems={installedTools}
+        selectedValue={toolToExecute}
         label="Tool"
       />
       <TextField
         sx={{ marginLeft: 2, minWidth: 400 }}
-        label="Commands"
         variant="outlined"
+        value={toolArguments}
+        onChange={handleToolArgumentsChange}
       />
-      <Button sx={{ marginLeft: 2, minWidth: 100 }} variant="contained">
+      <Button
+        sx={{ marginLeft: 2, minWidth: 100 }}
+        variant="contained"
+        onClick={handelClickButton}
+      >
         Run
       </Button>
     </FormControl>

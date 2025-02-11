@@ -8,28 +8,38 @@ import {
 } from "@mui/material";
 
 type Props = {
-  values: string[];
-  handleChange: (event: SelectChangeEvent) => void;
-  selected: string;
+  menuItems: string[];
+  handleSelectionChange: (event: SelectChangeEvent) => void;
+  selectedValue: string;
   label?: string;
 };
 
-function SelectTarget({ values, handleChange, selected, label }: Props) {
-  const menuItems = values.map((e: string, i: number) => (
+function CustomSelectMenu({
+  menuItems,
+  handleSelectionChange,
+  selectedValue,
+  label,
+}: Props) {
+  const menuItemList = menuItems.map((e: string, i: number) => (
     <MenuItem value={e} key={i}>
       {e}
     </MenuItem>
   ));
+
   return (
     <Box sx={{ minWidth: 100 }}>
       <FormControl fullWidth>
-        <InputLabel>{label ?? "Target"}</InputLabel>
-        <Select value={selected} label="Target" onChange={handleChange}>
-          {menuItems}
+        <InputLabel>{label ?? "None Label"}</InputLabel>
+        <Select
+          value={selectedValue}
+          label={label}
+          onChange={handleSelectionChange}
+        >
+          {menuItemList}
         </Select>
       </FormControl>
     </Box>
   );
 }
 
-export default SelectTarget;
+export default CustomSelectMenu;
