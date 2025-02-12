@@ -1,6 +1,7 @@
 
 using pmi.DataContext;
 using pmi.Project.Services;
+using pmi.Tool.Models;
 using pmi.Tool.Services;
 
 namespace pmi;
@@ -23,7 +24,7 @@ public class Program
 
 
         // Add services to the container.
-        builder.Services.AddScoped<IToolService, ToolService>();
+        builder.Services.AddScoped<AsyncToolService, ToolService>();
         builder.Services.AddScoped<ToolsDataJSON>();
         builder.Services.AddScoped<IProjectService, ProjectService>();
         builder.Services.AddControllers();
@@ -49,6 +50,7 @@ public class Program
         app.MapControllers();
         app.UseSwagger();
         app.UseSwaggerUI();
+        app.UseWebSockets();
         app.Run();
     }
 }

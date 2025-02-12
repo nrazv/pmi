@@ -15,7 +15,9 @@ public class ProjectEntity
     public ProjectInfo ProjectInfo { get; set; } = null!;
 
 
-    public ProjectEntity() { }
+    public ProjectEntity()
+    {
+    }
 
     public ProjectEntity(string id, string name, string domainName, string? ipAddress, ProjectInfo projectInfo)
     {
