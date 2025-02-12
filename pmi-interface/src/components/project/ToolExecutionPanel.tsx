@@ -1,9 +1,9 @@
 import { FormControl, SelectChangeEvent } from "@mui/material";
-import CustomSelectMenu from "../../SelectTarget";
-import React, { useEffect } from "react";
-import { Project } from "../../../models/Project";
-import ToolRunner from "../../ToolRunner";
+import React, { useEffect, useState } from "react";
 import useWebSocket from "react-use-websocket";
+import { Project } from "../../models/Project";
+import CustomSelectMenu from "../SelectTarget";
+import ToolRunner from "../ToolRunner";
 
 type Props = {
   project: Project;
@@ -12,7 +12,7 @@ type Props = {
 type ToolExecuteRequest = {
   target: string;
   tool: string;
-  arguments: string | null;
+  arguments: string;
 };
 
 const URL = "ws://localhost:8080/ws";
@@ -21,24 +21,29 @@ function ToolExecutionPanel({ project }: Props) {
   const { sendJsonMessage, lastMessage } = useWebSocket(URL);
 
   const [response, setResponse] = React.useState<string>("");
-  const [target, setTarget] = React.useState<string>("");
-  const [toolToExecute, setToolToExecute] = React.useState<string>("");
-  const [toolArguments, setToolArguments] = React.useState<string>("");
+  const [executionRequest, setRequest] = useState<ToolExecuteRequest>({
+    target: "",
+    tool: "",
+    arguments: "",
+  });
 
   const targets: string[] = [project.domainName, project.ipAddress];
 
   const handleTargetChange = (event: SelectChangeEvent) => {
-    setTarget(event.target.value as string);
+    setRequest({ ...executionRequest, target: event.target.value as string });
   };
 
   const handleToolChange = (event: SelectChangeEvent) => {
-    setToolToExecute(event.target.value as string);
+    setRequest({ ...executionRequest, tool: event.target.value as string });
   };
 
   const handleToolArgumentsChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setToolArguments(event.target.value);
+    setRequest({
+      ...executionRequest,
+      arguments: event.target.value as string,
+    });
   };
 
   const runTool = () => {
@@ -47,19 +52,15 @@ function ToolExecutionPanel({ project }: Props) {
   };
 
   const clearForm = (): void => {
-    setTarget("");
-    setToolToExecute("");
-    setToolArguments("");
+    setRequest({
+      target: "",
+      tool: "",
+      arguments: "",
+    });
   };
 
   const sendToolExecution = () => {
-    const request: ToolExecuteRequest = {
-      target: target,
-      tool: toolToExecute,
-      arguments: toolArguments,
-    };
-
-    sendJsonMessage(request);
+    sendJsonMessage(executionRequest);
   };
 
   useEffect(() => {
@@ -74,12 +75,12 @@ function ToolExecutionPanel({ project }: Props) {
         <CustomSelectMenu
           handleSelectionChange={handleTargetChange}
           menuItems={targets}
-          selectedValue={target}
+          selectedValue={executionRequest.target}
           label="Target"
         />
         <ToolRunner
-          toolArguments={toolArguments}
-          toolToExecute={toolToExecute}
+          toolArguments={executionRequest.arguments}
+          toolToExecute={executionRequest.tool}
           handelClickButton={runTool}
           handleToolChange={handleToolChange}
           handleToolArgumentsChange={handleToolArgumentsChange}

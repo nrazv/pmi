@@ -8,7 +8,6 @@
     "@fontsource/roboto": "^5.1.1",
     "@mui/icons-material": "^6.4.4",
     "@mui/material": "^6.4.4",
-    "@tailwindcss/postcss": "^4.0.6",
     "@tanstack/react-query": "^5.66.0",
     "@tanstack/react-query-devtools": "^5.66.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -20,8 +19,6 @@
     "@types/react-dom": "^19.0.3",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.7.9",
-    "npm-check-updates": "^17.1.14",
-    "postcss": "^8.5.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.5",
@@ -54,7 +51,6 @@
     ]
   },
   "devDependencies": {
-    "tailwindcss": "^4.0.6",
     "typescript": "^4.9.5"
   }
 }

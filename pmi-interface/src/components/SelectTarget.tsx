@@ -28,7 +28,7 @@ function CustomSelectMenu({
 
   return (
     <Box sx={{ minWidth: 100 }}>
-      <FormControl fullWidth>
+      <FormControl fullWidth size="small">
         <InputLabel>{label ?? "None Label"}</InputLabel>
         <Select
           value={selectedValue}

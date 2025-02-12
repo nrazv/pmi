@@ -1,12 +1,12 @@
 import { Tab, Tabs, Tooltip } from "@mui/material";
 import React from "react";
 import { Project } from "../../../models/Project";
-import ProjectInfoPanel from "../panel-tabs/ProjectInfoPanel";
 import TerminalIcon from "@mui/icons-material/Terminal";
-import ToolExecutionPanel from "../panel-tabs/ToolExecutionPanel";
 import AutoModeIcon from "@mui/icons-material/AutoMode";
-import RunningToolsPanel from "../panel-tabs/RunningToolsPanel";
+import RunningToolsPanel from "../RunningToolsPanel";
 import CustomTabPanel from "./CustomTabPanel";
+import ProjectInfoPanel from "../ProjectInfoPanel";
+import ToolExecutionPanel from "../ToolExecutionPanel";
 
 type ProjectTabsProps = {
   project: Project;

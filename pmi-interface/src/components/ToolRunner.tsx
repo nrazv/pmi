@@ -45,6 +45,7 @@ function ToolRunner({
       <TextField
         sx={{ marginLeft: 2, minWidth: 400 }}
         variant="outlined"
+        size="small"
         value={toolArguments}
         onChange={handleToolArgumentsChange}
       />
