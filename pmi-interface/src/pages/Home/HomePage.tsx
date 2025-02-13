@@ -1,13 +1,15 @@
 import { Box } from "@mui/material";
 
 import { useQuery } from "@tanstack/react-query";
-import "./HomePage.css";
 import { useState } from "react";
 import { fetchAllProjects } from "../../services/ApiService";
 import { Project } from "../../models/Project";
 import ProjectList from "../../components/project/ProjectList";
-import ProjectToolBar from "../../components/target-bar/ProjectToolBar";
+import ProjectToolBar from "../../components/ProjectToolBar";
 import ProjectTabs from "../../components/project/tabs/ProjectTabs";
+
+const mainBoxStyles = { display: "flex", flexDirection: "row", height: "94vh" };
+const toolBarBoxStyles = { flexGrow: 1, backgroundColor: "#eceff1" };
 
 const HomePage = () => {
   const [selectedProject, setSelectedProject] = useState<Project>();
@@ -17,18 +19,12 @@ const HomePage = () => {
   });
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "row",
-        height: "-webkit-fill-available",
-      }}
-    >
+    <Box sx={mainBoxStyles}>
       {data && (
         <ProjectList selectProject={setSelectedProject} projects={data} />
       )}
 
-      <Box sx={{ flexGrow: 1, backgroundColor: "#eceff1" }}>
+      <Box sx={toolBarBoxStyles}>
         <ProjectToolBar project={selectedProject} />
         {selectedProject && <ProjectTabs project={selectedProject} />}
       </Box>

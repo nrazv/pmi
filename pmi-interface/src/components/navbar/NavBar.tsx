@@ -5,7 +5,7 @@ import ProjectMenu from "../project/ProjectMenu";
 
 function NavBar() {
   return (
-    <AppBar position="sticky" color="primary" sx={{ margin: 0, padding: 0 }}>
+    <AppBar position="sticky" sx={{ margin: 0, padding: 0 }}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           PMI

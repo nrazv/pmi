@@ -1,6 +1,6 @@
 import { IconButton, Toolbar, Typography } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { Project } from "../../models/Project";
+import { Project } from "../models/Project";
 
 type Props = {
   project?: Project;
