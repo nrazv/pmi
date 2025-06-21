@@ -2,14 +2,13 @@ import { Tab, Tabs, Tooltip } from "@mui/material";
 import React from "react";
 import { Project } from "../../../models/Project";
 import TerminalIcon from "@mui/icons-material/Terminal";
-import AutoModeIcon from "@mui/icons-material/AutoMode";
-import RunningToolsPanel from "../RunningToolsPanel";
 import CustomTabPanel from "./CustomTabPanel";
 import ProjectInfoPanel from "../ProjectInfoPanel";
 import ToolExecutionPanel from "../ToolExecutionPanel";
+import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 
 type ProjectTabsProps = {
-  project: Project;
+  project: Project | undefined;
 };
 
 function ProjectTabs({ project }: ProjectTabsProps) {
@@ -21,27 +20,21 @@ function ProjectTabs({ project }: ProjectTabsProps) {
   return (
     <>
       <Tabs indicatorColor="secondary" value={tabIndex} onChange={handleChange}>
-        <Tab label="Project Info" id="info-tab" />
-
-        <Tooltip title="Execute Tool">
-          <Tab icon={<TerminalIcon />} id="item-tab" />
+        <Tooltip title="Project Settings">
+          <Tab id="settings-tab" icon={<SettingsApplicationsIcon />} />
         </Tooltip>
 
-        <Tooltip title="Running Tools">
-          <Tab icon={<AutoModeIcon />} id="info-tab-2" />
+        <Tooltip title="Execute & Running Tool's">
+          <Tab icon={<TerminalIcon />} id="execute-tab" />
         </Tooltip>
       </Tabs>
 
       <CustomTabPanel value={tabIndex} index={0}>
-        <ProjectInfoPanel projectInfo={project.projectInfo} />
+        {project && <ProjectInfoPanel projectInfo={project.projectInfo} />}
       </CustomTabPanel>
 
       <CustomTabPanel value={tabIndex} index={1}>
-        <ToolExecutionPanel project={project} />
-      </CustomTabPanel>
-
-      <CustomTabPanel value={tabIndex} index={2}>
-        <RunningToolsPanel />
+        {project && <ToolExecutionPanel project={project} />}
       </CustomTabPanel>
     </>
   );

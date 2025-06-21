@@ -4,6 +4,7 @@ import useWebSocket from "react-use-websocket";
 import { Project } from "../../models/Project";
 import CustomSelectMenu from "../SelectTarget";
 import ToolRunner from "../ToolRunner";
+import RunningTool from "../RunningTool";
 
 type Props = {
   project: Project;
@@ -20,7 +21,6 @@ const URL = "ws://localhost:8080/ws";
 function ToolExecutionPanel({ project }: Props) {
   const { sendJsonMessage, lastMessage } = useWebSocket(URL);
 
-  const [response, setResponse] = React.useState<string>("");
   const [executionRequest, setRequest] = useState<ToolExecuteRequest>({
     target: "",
     tool: "",
@@ -47,7 +47,7 @@ function ToolExecutionPanel({ project }: Props) {
   };
 
   const runTool = () => {
-    sendToolExecution();
+    sendJsonMessage(executionRequest);
     clearForm();
   };
 
@@ -58,16 +58,6 @@ function ToolExecutionPanel({ project }: Props) {
       arguments: "",
     });
   };
-
-  const sendToolExecution = () => {
-    sendJsonMessage(executionRequest);
-  };
-
-  useEffect(() => {
-    if (lastMessage?.data) {
-      setResponse((prev) => prev + "\n" + lastMessage?.data + "\n");
-    }
-  }, [lastMessage?.data]);
 
   return (
     <div>
@@ -86,7 +76,7 @@ function ToolExecutionPanel({ project }: Props) {
           handleToolArgumentsChange={handleToolArgumentsChange}
         />
       </FormControl>
-      <pre>{response}</pre>
+      <RunningTool lastMessage={lastMessage} />
     </div>
   );
 }

@@ -33,6 +33,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Content Include="./install-tools.sh">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<Using Include="System.Console" Static="true" />
 	</ItemGroup>
 	
