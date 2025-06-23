@@ -1,26 +1,16 @@
-import { FormControl, SelectChangeEvent } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import useWebSocket from "react-use-websocket";
+import { Box, FormControl, SelectChangeEvent } from "@mui/material";
+import React, { useState } from "react";
 import { Project } from "../../models/Project";
 import CustomSelectMenu from "../SelectTarget";
 import ToolRunner from "../ToolRunner";
-import RunningTool from "../RunningTool";
+import RunningToolsContainer from "./runningTools/RunningToolsContainer";
+import { ToolExecuteRequest } from "../../models/ToolExecuteRequest";
 
 type Props = {
   project: Project;
 };
 
-type ToolExecuteRequest = {
-  target: string;
-  tool: string;
-  arguments: string;
-};
-
-const URL = "ws://localhost:8080/ws";
-
 function ToolExecutionPanel({ project }: Props) {
-  const { sendJsonMessage, lastMessage } = useWebSocket(URL);
-
   const [executionRequest, setRequest] = useState<ToolExecuteRequest>({
     target: "",
     tool: "",
@@ -47,7 +37,7 @@ function ToolExecutionPanel({ project }: Props) {
   };
 
   const runTool = () => {
-    sendJsonMessage(executionRequest);
+    // sendJsonMessage(executionRequest);
     clearForm();
   };
 
@@ -60,8 +50,10 @@ function ToolExecutionPanel({ project }: Props) {
   };
 
   return (
-    <div>
-      <FormControl sx={{ display: "flex", flexDirection: "row" }}>
+    <Box sx={{ height: "75vh" }}>
+      <FormControl
+        sx={{ display: "flex", flexDirection: "row", marginBottom: 2 }}
+      >
         <CustomSelectMenu
           handleSelectionChange={handleTargetChange}
           menuItems={targets}
@@ -76,8 +68,8 @@ function ToolExecutionPanel({ project }: Props) {
           handleToolArgumentsChange={handleToolArgumentsChange}
         />
       </FormControl>
-      <RunningTool lastMessage={lastMessage} />
-    </div>
+      <RunningToolsContainer />
+    </Box>
   );
 }
 
