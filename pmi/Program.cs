@@ -27,6 +27,7 @@ public class Program
         builder.Services.AddScoped<AsyncToolService, ToolService>();
         builder.Services.AddScoped<ToolsDataJSON>();
         builder.Services.AddScoped<IProjectService, ProjectService>();
+        builder.Services.AddScoped<IWebSocketService, WebSocketService>();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

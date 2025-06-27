@@ -2,8 +2,10 @@
 {
     public class ToolExecutionRequest
     {
-        public string Target { get; set; }
-        public string Tool { get; set; }
-        public string Arguments { get; set; }
+        public required string Target { get; set; }
+        public required string Tool { get; set; }
+        public required string Arguments { get; set; }
+        public required string ProjectName { get; set; }
+        public string? ClientId { get; set; }
     }
 }

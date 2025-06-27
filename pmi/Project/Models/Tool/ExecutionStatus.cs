@@ -2,5 +2,5 @@ namespace pmi.Project.Models;
 
 public enum ExecutionStatus
 {
-    Running, Done
+    Running, Done, Failed, NotStarted
 }

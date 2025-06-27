@@ -9,6 +9,8 @@ public class PmiDb : DbContext
 {
     public DbSet<ProjectEntity> Projects { get; set; }
     public DbSet<ProjectInfo> ProjectsInfo { get; set; }
+    public DbSet<ExecutedToolEntity> ExecutedTools { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

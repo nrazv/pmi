@@ -17,6 +17,52 @@ namespace pmi.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
 
+            modelBuilder.Entity("pmi.Project.Models.ExecutedToolEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ClientId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ExecutedDated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ExecutionResult")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("FinishedDated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProjectId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RunnerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Target")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ToolArguments")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ExecutedTools");
+                });
+
             modelBuilder.Entity("pmi.Project.Models.ProjectEntity", b =>
                 {
                     b.Property<string>("Id")
@@ -69,6 +115,17 @@ namespace pmi.Migrations
                     b.ToTable("ProjectsInfo");
                 });
 
+            modelBuilder.Entity("pmi.Project.Models.ExecutedToolEntity", b =>
+                {
+                    b.HasOne("pmi.Project.Models.ProjectEntity", "Project")
+                        .WithMany("ExecutedTools")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("pmi.Project.Models.ProjectEntity", b =>
                 {
                     b.HasOne("pmi.Project.Models.ProjectInfo", "ProjectInfo")
@@ -76,6 +133,11 @@ namespace pmi.Migrations
                         .HasForeignKey("ProjectInfoId");
 
                     b.Navigation("ProjectInfo");
+                });
+
+            modelBuilder.Entity("pmi.Project.Models.ProjectEntity", b =>
+                {
+                    b.Navigation("ExecutedTools");
                 });
 #pragma warning restore 612, 618
         }

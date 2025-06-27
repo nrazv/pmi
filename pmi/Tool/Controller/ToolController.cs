@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using pmi.DataContext;
+using pmi.Project.Models;
 using pmi.Tool.Models;
 
 namespace pmi.Tool;
@@ -30,5 +31,11 @@ public class ToolController : ControllerBase
     public List<InstalledTool> InstalledTools()
     {
         return _toolsDataJSON.InstalledTools;
+    }
+
+    [HttpGet("executed/{projectName}", Name = "Get executed tool for project")]
+    public List<ExecutedToolEntity> GetExecutedToolEntitiesForProject(string projectName)
+    {
+        return _toolService.GetExecutedToolsByProjectName(projectName);
     }
 }

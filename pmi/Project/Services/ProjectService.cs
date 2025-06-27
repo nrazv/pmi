@@ -93,4 +93,65 @@ public class ProjectService : IProjectService
                 projectInfo: projectInfo
                 );
     }
+
+    public ProjectEntity AddExecutedTool(string projectId, ExecutedToolEntity executedTool)
+    {
+        var project = _pmiDb.Projects.Where(p => p.Id == projectId).First();
+        project.ExecutedTools.Add(executedTool);
+        _pmiDb.SaveChanges();
+        return project;
+    }
+
+    public ProjectEntity GetById(string id)
+    {
+        return _pmiDb.Projects.Where(p => p.Id == id).First();
+    }
+
+    public ProjectEntity GetByName(string name)
+    {
+        return _pmiDb.Projects.Where(p => p.Name == name).First();
+    }
+
+    public ExecutedToolEntity UpdateExecutedToo(ExecutedToolEntity executedTool)
+    {
+        var tool = _pmiDb.ExecutedTools.Where((e) => e.Id == executedTool.Id).First();
+        tool.ExecutionResult = executedTool.ExecutionResult;
+        tool.Status = executedTool.Status;
+        tool.FinishedDated = executedTool.FinishedDated;
+        tool.ClientId = executedTool.ClientId;
+        tool.RunnerId = executedTool.RunnerId;
+
+        _pmiDb.SaveChanges();
+
+        return tool;
+
+    }
+
+    public ExecutedToolEntity? GetExecutedTooById(string id)
+    {
+        try
+        {
+            return _pmiDb.ExecutedTools.Where((e) => e.Id == id).FirstOrDefault();
+
+        }
+        catch (Exception e)
+        {
+
+        }
+
+        return null;
+    }
+
+    public void AddNewExecutedTool(ExecutedToolEntity executedTool)
+    {
+        _pmiDb.ExecutedTools.Add(executedTool);
+        _pmiDb.SaveChanges();
+    }
+
+    public List<ExecutedToolEntity> GetExecutedToolEntitiesByProjectName(string projectName)
+    {
+        return _pmiDb.ExecutedTools.Include(et => et.Project)
+                .Where(et => et.Project.Name == projectName)
+                .ToList();
+    }
 }

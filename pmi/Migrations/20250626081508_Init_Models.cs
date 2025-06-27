@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace pmi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitializeDB : Migration
+    public partial class Init_Models : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,6 +46,38 @@ namespace pmi.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ExecutedTools",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    ProjectId = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    ToolArguments = table.Column<string>(type: "TEXT", nullable: false),
+                    Target = table.Column<string>(type: "TEXT", nullable: false),
+                    RunnerId = table.Column<string>(type: "TEXT", nullable: true),
+                    ClientId = table.Column<string>(type: "TEXT", nullable: true),
+                    Status = table.Column<int>(type: "INTEGER", nullable: true),
+                    ExecutionResult = table.Column<string>(type: "TEXT", nullable: true),
+                    ExecutedDated = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    FinishedDated = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExecutedTools", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExecutedTools_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExecutedTools_ProjectId",
+                table: "ExecutedTools",
+                column: "ProjectId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_Name",
                 table: "Projects",
@@ -61,6 +93,9 @@ namespace pmi.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ExecutedTools");
+
             migrationBuilder.DropTable(
                 name: "Projects");
 

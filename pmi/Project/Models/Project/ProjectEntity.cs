@@ -13,6 +13,7 @@ public class ProjectEntity
     public string? DomainName { get; set; }
     public string? IpAddress { get; set; }
     public ProjectInfo ProjectInfo { get; set; } = null!;
+    public ICollection<ExecutedToolEntity> ExecutedTools { get; } = new List<ExecutedToolEntity>();
 
 
     public ProjectEntity()

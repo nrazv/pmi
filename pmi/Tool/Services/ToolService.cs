@@ -1,64 +1,113 @@
-﻿using System.Net.WebSockets;
+﻿using System.Diagnostics;
+using System.Net.WebSockets;
 using System.Text;
-using System.Text.Json;
+using pmi.Project.Models;
+using pmi.Project.Services;
+using pmi.Tool.Mappers;
 using pmi.Tool.Models;
 using pmi.Tool.Runner;
+using pmi.Utilities;
 
 namespace pmi.Tool.Services;
 
 public class ToolService : AsyncToolService
 {
-    private readonly ToolRunner _runner;
 
-    public ToolService()
+    private readonly ProcessManager processManager;
+    private readonly IWebSocketService webSocketService;
+    private readonly IProjectService projectService;
+    private readonly ToolWSMapper toolWSMapper;
+
+    public ToolService(IWebSocketService webSocketService, IProjectService projectService)
     {
-        _runner = new ToolRunner();
+        this.webSocketService = webSocketService;
+        processManager = new ProcessManager(webSocketService, projectService);
+        toolWSMapper = new ToolWSMapper();
+        this.projectService = projectService;
     }
 
-    public string RunTool(ToolExecutionRequest toolExecution)
+
+    public override string RunTool(ToolExecutionRequest toolExecution)
     {
-        return _runner.RunTool(toolExecution);
+        return processManager.RunTool(toolExecution);
     }
 
-    public override async Task ExecuteToolAsync(HttpContext httpContext, WebSocket webSocket)
+    public override async Task ExecuteToolViaWebSocket(HttpContext context)
     {
-        var buffer = new byte[1024 * 4];
+        WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+        var request = await toolWSMapper.readRequestFromSocket(webSocket);
+        setRequestId(request);
+        webSocketService.RegisterClient(webSocket, request);
+        var process = processManager.CreateNewProcess(request);
+        string executedToolId = Guid.NewGuid().ToString();
+        createExecutedTool(request, executedToolId);
 
-        while (webSocket.State == WebSocketState.Open)
+
+
+        try
         {
-            var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+            process.ErrorDataReceived += (s, e) => _ = processManager.HandleErrorDataReceived(e, webSocket);
+            process.Exited += (s, e) => _ = processManager.HandleProcessExited(process, request);
+            process.OutputDataReceived += async (s, e) => await HandleOutputAsync(e, webSocket, executedToolId);
 
-            if (result.MessageType == WebSocketMessageType.Text)
-            {
-                ToolExecutionRequest toolExecutionRequest;
 
-                try
-                {
-                    toolExecutionRequest = mapToToolExecutionRequest(buffer, result);
-                    await _runner.ExecuteToolAsync(toolExecutionRequest, webSocket);
-                }
-                catch (Exception ex)
-                {
-                    WriteLine(ex.Message);
-                }
-            }
-            else if (result.MessageType == WebSocketMessageType.Close)
+            process.Start();
+            setRunnerId(process.Id.ToString(), executedToolId);
+            process.BeginOutputReadLine();
+            process.WaitForExit();
+        }
+        catch (Exception ex)
+        {
+            byte[] errorBytes = Encoding.UTF8.GetBytes($"Exception: {ex.Message}");
+            await webSocket.SendAsync(new ArraySegment<byte>(errorBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+            WriteLine(ex.Message);
+            process.Dispose();
+        }
+        finally
+        {
+            process.Dispose();
+            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing connection", CancellationToken.None);
+        }
+
+    }
+
+    private void setRequestId(ToolExecutionRequest request)
+    {
+        if (request.ClientId is null) request.ClientId = Guid.NewGuid().ToString();
+    }
+
+    public override List<ExecutedToolEntity> GetExecutedToolsByProjectName(string projectName)
+    {
+        return projectService.GetExecutedToolEntitiesByProjectName(projectName);
+    }
+
+
+    private async Task HandleOutputAsync(DataReceivedEventArgs e, WebSocket webSocket, string toolId)
+    {
+        if (!string.IsNullOrEmpty(e.Data))
+        {
+            await processManager.HandleOutputAsync(e, webSocket);
+            var executedTool = projectService.GetExecutedTooById(toolId);
+            if (executedTool is not null)
             {
-                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+                executedTool.ExecutionResult = $"{executedTool.ExecutionResult}\n {e.Data}";
+                projectService.UpdateExecutedToo(executedTool);
             }
         }
     }
 
-    private ToolExecutionRequest mapToToolExecutionRequest(byte[] buffer, WebSocketReceiveResult socketReceiveResult)
+    private void createExecutedTool(ToolExecutionRequest request, string executedToolId)
     {
-        string messageJsonString = Encoding.UTF8.GetString(buffer, 0, socketReceiveResult.Count);
-        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var project = projectService.GetByName(request.ProjectName);
+        var executedTool = ProjectFactory.CreateExecutedToolFromExecutionRequest(toolId: executedToolId, request: request, project: project, runnerId: null);
+        projectService.AddNewExecutedTool(executedTool);
+    }
 
-        ToolExecutionRequest? toolExecutionRequest = JsonSerializer.Deserialize<ToolExecutionRequest>(messageJsonString, options);
-        if (toolExecutionRequest is null)
-        {
-            throw new ArgumentNullException(nameof(WebSocketReceiveResult), "Object sent in WebSocketReceiveResult can't be null");
-        }
-        return toolExecutionRequest;
+    private void setRunnerId(string runnerId, string executedToolId)
+    {
+        var executedTool = projectService.GetExecutedTooById(executedToolId);
+        if (executedTool is not null) executedTool.RunnerId = runnerId;
+        projectService.UpdateExecutedToo(executedTool);
+
     }
 }

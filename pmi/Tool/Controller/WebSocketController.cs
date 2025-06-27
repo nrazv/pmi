@@ -1,4 +1,3 @@
-using System.Net.WebSockets;
 using Microsoft.AspNetCore.Mvc;
 using pmi.Tool.Models;
 
@@ -23,10 +22,7 @@ public class WebSocketController : Controller
 
         if (context.WebSockets.IsWebSocketRequest)
         {
-            using (WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync())
-            {
-                await _toolService.ExecuteToolAsync(context, webSocket);
-            }
+            await _toolService.ExecuteToolViaWebSocket(context);
         }
         else
         {
