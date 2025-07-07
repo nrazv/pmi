@@ -1,3 +1,4 @@
+import { ExecutedTool } from "../models/ExecutedTool";
 import { InstalledTool } from "../models/InstalledTool";
 import { Project } from "../models/Project";
 import axiosInstance from "./axios";
@@ -29,5 +30,14 @@ export const fetchAllProjects = async (): Promise<Project[]> => {
 
 export const fetchInstalledTools = async (): Promise<InstalledTool[]> => {
   const response = await axiosInstance.get<InstalledTool[]>("tool/installed");
+  return response.data;
+};
+
+export const fetchExecutedToolsForProject = async (
+  projectName: string
+): Promise<ExecutedTool[]> => {
+  const response = await axiosInstance.get<ExecutedTool[]>(
+    `tool/executed/${projectName}`
+  );
   return response.data;
 };

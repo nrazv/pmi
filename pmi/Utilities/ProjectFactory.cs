@@ -13,7 +13,7 @@ public static class ProjectFactory
             Id = toolId,
             ProjectId = project.Id,
             Project = project,
-            Name = request.ProjectName,
+            Name = request.Tool,
             RunnerId = runnerId,
             Status = ExecutionStatus.NotStarted,
             Target = request.Target,

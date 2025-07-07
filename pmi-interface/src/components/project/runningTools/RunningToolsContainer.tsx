@@ -1,5 +1,8 @@
 import { Box } from "@mui/material";
 import ExecutedToolsList from "./ExecutedToolsList";
+import { Project } from "../../../models/Project";
+import { useState } from "react";
+import { ExecutedTool } from "../../../models/ExecutedTool";
 
 const containerStyle = {
   display: "flex",
@@ -14,13 +17,26 @@ const runningToolResultStyle = {
   flex: 1,
 };
 
-function RunningToolsContainer() {
+type Props = {
+  project: Project;
+};
+
+function RunningToolsContainer({ project }: Props) {
+  const [executionResult, setExecutionResult] = useState<ExecutedTool>();
+
+  const handelExecutedToolSelect = (executedTool: ExecutedTool) => {
+    setExecutionResult(executedTool);
+  };
+
   return (
     <Box sx={containerStyle}>
       <Box sx={runningToolStyle}>
-        <ExecutedToolsList />
+        <ExecutedToolsList
+          handelSelect={handelExecutedToolSelect}
+          project={project}
+        />
       </Box>
-      <Box sx={runningToolResultStyle}>B</Box>
+      <Box sx={runningToolResultStyle}>{executionResult?.executionResult}</Box>
     </Box>
   );
 }

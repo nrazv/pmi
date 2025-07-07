@@ -78,7 +78,7 @@ function ToolExecutionPanel({ project }: Props) {
           handleToolArgumentsChange={handleToolArgumentsChange}
         />
       </FormControl>
-      <RunningToolsContainer />
+      <RunningToolsContainer project={project} />
     </Box>
   );
 }

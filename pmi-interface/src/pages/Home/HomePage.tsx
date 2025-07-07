@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 
 const HomePage = () => {
   const [selectedProject, setSelectedProject] = useState<Project>();
+
   const { data } = useQuery({
     queryKey: ["projects"],
     queryFn: fetchAllProjects,
