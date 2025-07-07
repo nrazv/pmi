@@ -15,7 +15,7 @@ public static class ProjectFactory
             Project = project,
             Name = request.Tool,
             RunnerId = runnerId,
-            Status = ExecutionStatus.NotStarted,
+            Status = ExecutionStatus.Running,
             Target = request.Target,
             ClientId = request.ClientId,
             ToolArguments = request.Arguments,

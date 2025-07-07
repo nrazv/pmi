@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Project } from "../../../models/Project";
 import React, { ReactElement } from "react";
 import { ExecutedTool } from "../../../models/ExecutedTool";
+import { ExecutionStatus } from "../../../models/ExecutionStatus";
 
 type Props = {
   project: Project;
@@ -30,6 +31,21 @@ function ExecutedToolsList({ project, handelSelect }: Props) {
     );
   };
 
+  const getChipColor = (status: string): "error" | "success" | "warning" => {
+    switch (status) {
+      case "Running":
+        return "warning";
+      case "Done":
+        return "success";
+      case "Failed":
+        return "error";
+      case "NotStarted":
+        return "error";
+      default:
+        return "error";
+    }
+  };
+
   return (
     <List
       sx={{
@@ -48,8 +64,8 @@ function ExecutedToolsList({ project, handelSelect }: Props) {
             secondaryAction={
               <Chip
                 size="small"
-                label="Completed"
-                color="success"
+                label={e.status}
+                color={getChipColor(e.status.toString())}
                 sx={{ borderRadius: 1 }}
               />
             }

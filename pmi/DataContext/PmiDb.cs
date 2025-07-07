@@ -30,5 +30,12 @@ public class PmiDb : DbContext
             v => v.ToString(),
             v => (ProjectStatus)Enum.Parse(typeof(ProjectStatus), v)
        );
+
+        modelBuilder.Entity<ExecutedToolEntity>()
+            .Property(e => e.Status)
+            .HasConversion(
+                v => v.ToString(),
+                v => (ExecutionStatus)Enum.Parse(typeof(ExecutionStatus), v)
+            );
     }
 }

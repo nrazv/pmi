@@ -18,6 +18,7 @@ public class ExecutedToolEntity
     public required string Target { get; set; }
     public string? RunnerId { get; set; }
     public string? ClientId { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public ExecutionStatus? Status { get; set; }
     public string? ExecutionResult { get; set; } = string.Empty;
     public DateTime? ExecutedDated { get; set; }

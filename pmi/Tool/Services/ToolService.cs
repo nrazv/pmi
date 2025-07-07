@@ -65,8 +65,17 @@ public class ToolService : AsyncToolService
         }
         finally
         {
+            var exitCode = process.ExitCode;
             process.Dispose();
             await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing connection", CancellationToken.None);
+            var executedTool = projectService.GetExecutedTooById(executedToolId);
+            if (executedTool is not null && exitCode == 0)
+            {
+                executedTool.Status = ExecutionStatus.Done;
+                executedTool.FinishedDated = DateTime.Now;
+                projectService.UpdateExecutedToo(executedTool);
+            }
+
         }
 
     }
