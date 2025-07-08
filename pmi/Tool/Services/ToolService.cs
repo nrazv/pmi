@@ -36,6 +36,12 @@ public class ToolService : AsyncToolService
     {
         WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
         var request = await toolWSMapper.readRequestFromSocket(webSocket);
+
+        if (request is null)
+        {
+            return;
+        }
+
         setRequestId(request);
         webSocketService.RegisterClient(webSocket, request);
         var process = processManager.CreateNewProcess(request);

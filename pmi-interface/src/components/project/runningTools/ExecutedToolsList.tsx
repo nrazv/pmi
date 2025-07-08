@@ -3,9 +3,8 @@ import { Chip, List, ListItemButton, Typography } from "@mui/material";
 import { fetchExecutedToolsForProject } from "../../../services/ApiService";
 import { useQuery } from "@tanstack/react-query";
 import { Project } from "../../../models/Project";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import { ExecutedTool } from "../../../models/ExecutedTool";
-import { ExecutionStatus } from "../../../models/ExecutionStatus";
 
 type Props = {
   project: Project;
@@ -18,7 +17,7 @@ function ExecutedToolsList({ project, handelSelect }: Props) {
     queryFn: () => fetchExecutedToolsForProject(project.name ?? ""),
   });
 
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [selectedIndex, setSelectedIndex] = useState<number>();
 
   const handleListItemClick = (executedTool: ExecutedTool, index: number) => {
     setSelectedIndex(index);

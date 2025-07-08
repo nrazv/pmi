@@ -3,6 +3,7 @@ import ExecutedToolsList from "./ExecutedToolsList";
 import { Project } from "../../../models/Project";
 import { useState } from "react";
 import { ExecutedTool } from "../../../models/ExecutedTool";
+import { BorderColor } from "@mui/icons-material";
 
 const containerStyle = {
   display: "flex",
@@ -15,6 +16,9 @@ const runningToolStyle = {
 
 const runningToolResultStyle = {
   flex: 1,
+  overflow: "auto",
+  maxWidth: 1500,
+  height: 950,
 };
 
 type Props = {
@@ -36,7 +40,9 @@ function RunningToolsContainer({ project }: Props) {
           project={project}
         />
       </Box>
-      <Box sx={runningToolResultStyle}>{executionResult?.executionResult}</Box>
+      <Box sx={runningToolResultStyle}>
+        <pre>{executionResult?.executionResult}</pre>
+      </Box>
     </Box>
   );
 }

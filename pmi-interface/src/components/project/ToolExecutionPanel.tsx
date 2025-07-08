@@ -15,6 +15,7 @@ const URL = process.env.REACT_APP_WS_URL ?? "";
 
 function ToolExecutionPanel({ project }: Props) {
   const { sendJsonMessage, lastMessage } = useWebSocket(URL);
+
   const [executionRequest, setRequest] = useState<ToolExecuteRequest>({
     target: "",
     tool: "",

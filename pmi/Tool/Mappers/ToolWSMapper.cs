@@ -7,9 +7,15 @@ namespace pmi.Tool.Mappers;
 
 public class ToolWSMapper
 {
-    public ToolExecutionRequest mapToToolExecutionRequest(byte[] buffer, WebSocketReceiveResult socketReceiveResult)
+    public ToolExecutionRequest? mapToToolExecutionRequest(byte[] buffer, WebSocketReceiveResult socketReceiveResult)
     {
         string messageJsonString = Encoding.UTF8.GetString(buffer, 0, socketReceiveResult.Count);
+        if (String.IsNullOrEmpty(messageJsonString))
+        {
+            Write($"{nameof(messageJsonString)} is an empty string");
+            return null;
+        }
+
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
         ToolExecutionRequest? toolExecutionRequest = JsonSerializer.Deserialize<ToolExecutionRequest>(messageJsonString, options);
@@ -20,7 +26,7 @@ public class ToolWSMapper
         return toolExecutionRequest;
     }
 
-    public async Task<ToolExecutionRequest> readRequestFromSocket(WebSocket webSocket)
+    public async Task<ToolExecutionRequest?> readRequestFromSocket(WebSocket webSocket)
     {
         var buffer = new byte[1024 * 4];
         var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
