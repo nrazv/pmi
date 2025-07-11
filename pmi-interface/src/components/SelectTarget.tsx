@@ -34,6 +34,7 @@ function CustomSelectMenu({
           value={selectedValue}
           label={label}
           onChange={handleSelectionChange}
+          required
         >
           {menuItemList}
         </Select>

@@ -25,6 +25,7 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddScoped<AsyncToolService, ToolService>();
+        builder.Services.AddSingleton<ObservableProcessResults>();
         builder.Services.AddScoped<ToolsDataJSON>();
         builder.Services.AddScoped<IProjectService, ProjectService>();
         builder.Services.AddScoped<IWebSocketService, WebSocketService>();

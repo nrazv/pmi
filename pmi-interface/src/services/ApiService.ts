@@ -1,6 +1,7 @@
 import { ExecutedTool } from "../models/ExecutedTool";
 import { InstalledTool } from "../models/InstalledTool";
 import { Project } from "../models/Project";
+import { ToolExecuteRequest } from "../models/ToolExecuteRequest";
 import axiosInstance from "./axios";
 
 class ApiService {
@@ -39,5 +40,10 @@ export const fetchExecutedToolsForProject = async (
   const response = await axiosInstance.get<ExecutedTool[]>(
     `tool/executed/${projectName}`
   );
+  return response.data;
+};
+
+export const executeTool = async (request: ToolExecuteRequest) => {
+  const response = await axiosInstance.post("tool/execute", request);
   return response.data;
 };

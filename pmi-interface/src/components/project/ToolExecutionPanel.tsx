@@ -6,16 +6,13 @@ import ToolRunner from "../ToolRunner";
 import RunningToolsContainer from "./runningTools/RunningToolsContainer";
 import { ToolExecuteRequest } from "../../models/ToolExecuteRequest";
 import useWebSocket from "react-use-websocket";
+import { executeTool } from "../../services/ApiService";
 
 type Props = {
   project: Project;
 };
 
-const URL = process.env.REACT_APP_WS_URL ?? "";
-
 function ToolExecutionPanel({ project }: Props) {
-  const { sendJsonMessage, lastMessage } = useWebSocket(URL);
-
   const [executionRequest, setRequest] = useState<ToolExecuteRequest>({
     target: "",
     tool: "",
@@ -43,7 +40,7 @@ function ToolExecutionPanel({ project }: Props) {
   };
 
   const runTool = () => {
-    sendJsonMessage(executionRequest);
+    executeTool(executionRequest);
     clearForm();
   };
 

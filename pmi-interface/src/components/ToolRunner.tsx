@@ -47,12 +47,14 @@ function ToolRunner({
         variant="outlined"
         size="small"
         value={toolArguments}
+        required
         onChange={handleToolArgumentsChange}
       />
       <Button
         sx={{ marginLeft: 2, minWidth: 100 }}
         variant="contained"
         onClick={handelClickButton}
+        disabled={toolArguments == "" && toolToExecute == ""}
       >
         Run
       </Button>

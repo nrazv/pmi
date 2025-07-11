@@ -6,7 +6,6 @@ namespace pmi.Tool.Services;
 
 public interface IWebSocketService
 {
-    public void RegisterClient(WebSocket client, ToolExecutionRequest request);
-    public void UnregisterClient(ToolExecutionRequest request);
+    public Task GetExecutedToolResult(HttpContext context);
 
 }

@@ -3,7 +3,7 @@ import ExecutedToolsList from "./ExecutedToolsList";
 import { Project } from "../../../models/Project";
 import { useState } from "react";
 import { ExecutedTool } from "../../../models/ExecutedTool";
-import { BorderColor } from "@mui/icons-material";
+import ExecutedToolResult from "./ExecutedToolResult";
 
 const containerStyle = {
   display: "flex",
@@ -41,7 +41,9 @@ function RunningToolsContainer({ project }: Props) {
         />
       </Box>
       <Box sx={runningToolResultStyle}>
-        <pre>{executionResult?.executionResult}</pre>
+        {executionResult && (
+          <ExecutedToolResult executedTool={executionResult} />
+        )}
       </Box>
     </Box>
   );

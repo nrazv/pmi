@@ -13,6 +13,11 @@ public abstract class AsyncToolService : IToolService
         throw new NotImplementedException();
     }
 
+    public virtual async Task GetExecutedToolViaWebSocket(HttpContext context)
+    {
+        throw new NotImplementedException();
+    }
+
     public virtual List<ExecutedToolEntity> GetExecutedToolsByProjectName(string projectName)
     {
         throw new NotImplementedException();
@@ -21,5 +26,10 @@ public abstract class AsyncToolService : IToolService
     public virtual string RunTool(ToolExecutionRequest toolExecution)
     {
         throw new NotImplementedException();
+    }
+    public virtual void RunProcess(ToolExecutionRequest request)
+    {
+        throw new NotImplementedException();
+
     }
 }

@@ -33,4 +33,13 @@ public class ToolWSMapper
 
         return mapToToolExecutionRequest(buffer, result);
     }
+
+    public async Task<string?> getExecutedToolId(WebSocket webSocket)
+    {
+        var buffer = new byte[1024 * 4];
+        var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+        string id = Encoding.UTF8.GetString(buffer, 0, result.Count);
+
+        return id;
+    }
 }

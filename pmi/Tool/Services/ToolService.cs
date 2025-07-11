@@ -14,100 +14,103 @@ public class ToolService : AsyncToolService
 {
 
     private readonly ProcessManager processManager;
-    private readonly IWebSocketService webSocketService;
     private readonly IProjectService projectService;
-    private readonly ToolWSMapper toolWSMapper;
+    private readonly ObservableProcessResults processResults;
 
-    public ToolService(IWebSocketService webSocketService, IProjectService projectService)
+    public ToolService(IProjectService projectService, ObservableProcessResults processResults)
     {
-        this.webSocketService = webSocketService;
-        processManager = new ProcessManager(webSocketService, projectService);
-        toolWSMapper = new ToolWSMapper();
+        processManager = new ProcessManager();
         this.projectService = projectService;
+        this.processResults = processResults;
     }
 
 
-    public override string RunTool(ToolExecutionRequest toolExecution)
+
+    public override void RunProcess(ToolExecutionRequest request)
     {
-        return processManager.RunTool(toolExecution);
-    }
-
-    public override async Task ExecuteToolViaWebSocket(HttpContext context)
-    {
-        WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-        var request = await toolWSMapper.readRequestFromSocket(webSocket);
-
-        if (request is null)
-        {
-            return;
-        }
-
-        setRequestId(request);
-        webSocketService.RegisterClient(webSocket, request);
         var process = processManager.CreateNewProcess(request);
         string executedToolId = Guid.NewGuid().ToString();
         createExecutedTool(request, executedToolId);
 
-
-
         try
         {
-            process.ErrorDataReceived += (s, e) => _ = processManager.HandleErrorDataReceived(e, webSocket);
-            process.Exited += (s, e) => _ = processManager.HandleProcessExited(process, request);
-            process.OutputDataReceived += async (s, e) => await HandleOutputAsync(e, webSocket, executedToolId);
+            process.OutputDataReceived += (obj, dataArgs) =>
+            {
+                if (dataArgs.Data is not null)
+                {
+                    WriteLine(dataArgs.Data);
+                    string processOutput = dataArgs.Data;
+                    processResults.Append(executedToolId, processOutput);
+                    updateExecutedTool(executedToolId, processOutput);
+                }
+            };
 
+            process.ErrorDataReceived += (obj, dataArgs) =>
+            {
+                if (!string.IsNullOrEmpty(dataArgs.Data))
+                {
+                    WriteLine($"Process Error: {dataArgs.Data}");
+                    processResults.Remove(executedToolId);
+
+                    var executedTool = projectService.GetExecutedTooById(executedToolId);
+                    if (executedTool is not null)
+                    {
+                        executedTool.Status = ExecutionStatus.Failed;
+                        executedTool.FinishedDated = DateTime.Now;
+                        projectService.UpdateExecutedToo(executedTool);
+                    }
+                }
+            };
+
+            process.Exited += (obj, dataArgs) =>
+            {
+                WriteLine($"Process Exited");
+                updateExecutedToolStatus(executedToolId, ExecutionStatus.Done);
+            };
 
             process.Start();
-            setRunnerId(process.Id.ToString(), executedToolId);
             process.BeginOutputReadLine();
             process.WaitForExit();
         }
         catch (Exception ex)
         {
-            byte[] errorBytes = Encoding.UTF8.GetBytes($"Exception: {ex.Message}");
-            await webSocket.SendAsync(new ArraySegment<byte>(errorBytes), WebSocketMessageType.Text, true, CancellationToken.None);
-            WriteLine(ex.Message);
-            process.Dispose();
+            WriteLine($"Process Exception ERROR: {ex.Message}");
+            processResults.Remove(executedToolId);
+            updateExecutedToolStatus(executedToolId, ExecutionStatus.Failed);
         }
         finally
         {
-            var exitCode = process.ExitCode;
             process.Dispose();
-            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing connection", CancellationToken.None);
-            var executedTool = projectService.GetExecutedTooById(executedToolId);
-            if (executedTool is not null && exitCode == 0)
-            {
-                executedTool.Status = ExecutionStatus.Done;
-                executedTool.FinishedDated = DateTime.Now;
-                projectService.UpdateExecutedToo(executedTool);
-            }
-
+            Write("Process Disposed");
+            updateExecutedToolStatus(executedToolId, ExecutionStatus.Done);
         }
-
     }
 
-    private void setRequestId(ToolExecutionRequest request)
-    {
-        if (request.ClientId is null) request.ClientId = Guid.NewGuid().ToString();
-    }
+
 
     public override List<ExecutedToolEntity> GetExecutedToolsByProjectName(string projectName)
     {
         return projectService.GetExecutedToolEntitiesByProjectName(projectName);
     }
 
-
-    private async Task HandleOutputAsync(DataReceivedEventArgs e, WebSocket webSocket, string toolId)
+    private void updateExecutedTool(string toolId, string newValue)
     {
-        if (!string.IsNullOrEmpty(e.Data))
+        var executedTool = projectService.GetExecutedTooById(toolId);
+        if (executedTool is not null)
         {
-            await processManager.HandleOutputAsync(e, webSocket);
-            var executedTool = projectService.GetExecutedTooById(toolId);
-            if (executedTool is not null)
-            {
-                executedTool.ExecutionResult = $"{executedTool.ExecutionResult}\n {e.Data}";
-                projectService.UpdateExecutedToo(executedTool);
-            }
+            executedTool.ExecutionResult = $"{executedTool.ExecutionResult}\n {newValue}";
+            projectService.UpdateExecutedToo(executedTool);
+        }
+    }
+
+    private void updateExecutedToolStatus(string toolId, ExecutionStatus? executionStatus)
+    {
+        var executedTool = projectService.GetExecutedTooById(toolId);
+        if (executedTool is not null)
+        {
+            executedTool.Status = executionStatus;
+            executedTool.FinishedDated = DateTime.Now;
+            projectService.UpdateExecutedToo(executedTool);
         }
     }
 
@@ -116,13 +119,5 @@ public class ToolService : AsyncToolService
         var project = projectService.GetByName(request.ProjectName);
         var executedTool = ProjectFactory.CreateExecutedToolFromExecutionRequest(toolId: executedToolId, request: request, project: project, runnerId: null);
         projectService.AddNewExecutedTool(executedTool);
-    }
-
-    private void setRunnerId(string runnerId, string executedToolId)
-    {
-        var executedTool = projectService.GetExecutedTooById(executedToolId);
-        if (executedTool is not null) executedTool.RunnerId = runnerId;
-        projectService.UpdateExecutedToo(executedTool);
-
     }
 }

@@ -1,6 +1,4 @@
-﻿using pmi.Project.Services;
-using pmi.Tool.Models;
-using pmi.Tool.Services;
+﻿using pmi.Tool.Models;
 using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Text;
@@ -9,14 +7,8 @@ namespace pmi.Tool.Runner;
 
 public class ProcessManager
 {
-    private readonly IWebSocketService webSocketService;
-    private readonly IProjectService projectService;
 
-    public ProcessManager(IWebSocketService webSocketService, IProjectService projectService)
-    {
-        this.webSocketService = webSocketService;
-        this.projectService = projectService;
-    }
+
 
     public string RunTool(ToolExecutionRequest toolExecution)
     {
@@ -116,7 +108,6 @@ public class ProcessManager
     {
         WriteLine($"Process with id {process.Id} has exited.");
         WriteLine($"Closing {nameof(WebSocket)} connection");
-        webSocketService.UnregisterClient(request);
     }
 
 }
