@@ -3,13 +3,14 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using pmi.Data;
 using pmi.DataContext;
 
 #nullable disable
 
 namespace pmi.Migrations
 {
-    [DbContext(typeof(PmiDb))]
+    [DbContext(typeof(PmiDbContext))]
     partial class PmiDbModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

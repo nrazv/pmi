@@ -1,4 +1,4 @@
-namespace pmi.Project.Models;
+namespace pmi.ExecutedTool.Models;
 
 public enum ExecutionStatus
 {

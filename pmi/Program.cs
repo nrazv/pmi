@@ -1,5 +1,8 @@
 
+using pmi.Data;
 using pmi.DataContext;
+using pmi.Project.Builders;
+using pmi.Project.Repository;
 using pmi.Project.Services;
 using pmi.Tool.Models;
 using pmi.Tool.Services;
@@ -26,9 +29,12 @@ public class Program
         // Add services to the container.
         builder.Services.AddScoped<AsyncToolService, ToolService>();
         builder.Services.AddSingleton<ObservableProcessResults>();
-        builder.Services.AddScoped<ToolsDataJSON>();
         builder.Services.AddScoped<IProjectService, ProjectService>();
         builder.Services.AddScoped<IWebSocketService, WebSocketService>();
+        builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+        builder.Services.AddScoped<ToolsDataJSON>();
+        builder.Services.AddScoped<ProjectEntityBuilder>();
+        builder.Services.AddScoped<PmiDbContext>();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

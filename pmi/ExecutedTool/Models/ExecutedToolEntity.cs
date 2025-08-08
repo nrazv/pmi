@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using pmi.Project.Models;
 
-namespace pmi.Project.Models;
+namespace pmi.ExecutedTool.Models;
 
 
 [Table("ExecutedTools")]

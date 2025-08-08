@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Text;
 
-namespace pmi.Tool.Runner;
+namespace pmi.Tool.Managers;
 
 public class ProcessManager
 {

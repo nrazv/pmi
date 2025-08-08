@@ -4,13 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using pmi.Data;
 using pmi.DataContext;
 
 #nullable disable
 
 namespace pmi.Migrations
 {
-    [DbContext(typeof(PmiDb))]
+    [DbContext(typeof(PmiDbContext))]
     [Migration("20250707135946_ConvertEnumToString")]
     partial class ConvertEnumToString
     {

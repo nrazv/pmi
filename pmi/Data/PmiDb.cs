@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using pmi.ExecutedTool.Models;
 using pmi.Project.Models;
-using pmi.Tool;
 
 
-namespace pmi.DataContext;
+namespace pmi.Data;
 
-public class PmiDb : DbContext
+public class PmiDbContext : DbContext
 {
     public DbSet<ProjectEntity> Projects { get; set; }
     public DbSet<ProjectInfo> ProjectsInfo { get; set; }

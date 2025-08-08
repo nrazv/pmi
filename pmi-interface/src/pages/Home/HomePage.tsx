@@ -12,6 +12,7 @@ const HomePage = () => {
   const { data } = useQuery({
     queryKey: ["projects"],
     queryFn: fetchAllProjects,
+    refetchInterval: 5000,
   });
 
   return (

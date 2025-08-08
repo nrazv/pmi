@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using pmi.ExecutedTool.Models;
 
 namespace pmi.Project.Models;
 

@@ -5,8 +5,10 @@ using pmi.Project.Models;
 using pmi.Project.Services;
 using pmi.Tool.Mappers;
 using pmi.Tool.Models;
-using pmi.Tool.Runner;
+using pmi.Tool.Managers;
 using pmi.Utilities;
+using pmi.ExecutedTool.Models;
+using System.Threading.Tasks;
 
 namespace pmi.Tool.Services;
 
@@ -114,9 +116,9 @@ public class ToolService : AsyncToolService
         }
     }
 
-    private void createExecutedTool(ToolExecutionRequest request, string executedToolId)
+    private async Task createExecutedTool(ToolExecutionRequest request, string executedToolId)
     {
-        var project = projectService.GetByName(request.ProjectName);
+        var project = await projectService.GetByName(request.ProjectName);
         var executedTool = ProjectFactory.CreateExecutedToolFromExecutionRequest(toolId: executedToolId, request: request, project: project, runnerId: null);
         projectService.AddNewExecutedTool(executedTool);
     }

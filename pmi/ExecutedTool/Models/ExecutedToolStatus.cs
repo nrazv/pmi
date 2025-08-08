@@ -1,4 +1,4 @@
-namespace pmi.Tool.Models;
+namespace pmi.ExecutedTool.Models;
 
 public enum ProcessStatus
 {
