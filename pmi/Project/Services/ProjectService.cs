@@ -34,17 +34,18 @@ public class ProjectService : IProjectService
         }));
     }
 
-    public async Task<List<ProjectDto>> GetProjects()
+    public async Task<List<ProjectEntity>> GetProjects()
     {
         var projects = await repository.GetAll();
-        return _mapper.Map<List<ProjectDto>>(projects);
+        return projects.ToList();
     }
 
-    public async Task NewProject(CreateProjectDto p)
+    public async Task<ProjectEntity> NewProject(CreateProjectDto p)
     {
         var newProjectEntity = entityBuilder.createNewProjectEntity(p);
         await repository.Add(newProjectEntity);
         await repository.Save();
+        return newProjectEntity;
     }
 
     public async Task AddExecutedTool(string projectId, ExecutedToolEntity executedTool)

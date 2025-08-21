@@ -4,8 +4,8 @@ namespace pmi.Project.Services;
 
 public interface IProjectService
 {
-    public Task<List<ProjectDto>> GetProjects();
-    public Task NewProject(CreateProjectDto project);
+    public Task<List<ProjectEntity>> GetProjects();
+    public Task<ProjectEntity> NewProject(CreateProjectDto project);
     public Task AddExecutedTool(string projectId, ExecutedToolEntity executedTool);
     public Task<ProjectEntity?> GetById(string id);
     public Task<ProjectEntity?> GetByName(string name);

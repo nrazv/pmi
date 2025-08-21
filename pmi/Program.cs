@@ -1,6 +1,9 @@
 
 using pmi.Data;
 using pmi.DataContext;
+using pmi.ExecutedTool;
+using pmi.ExecutedTool.Repository;
+using pmi.ExecutedTool.Service;
 using pmi.Project.Builders;
 using pmi.Project.Repository;
 using pmi.Project.Services;
@@ -26,12 +29,18 @@ public class Program
         });
 
 
-        // Add services to the container.
+        // Add services
         builder.Services.AddScoped<AsyncToolService, ToolService>();
-        builder.Services.AddSingleton<ObservableProcessResults>();
         builder.Services.AddScoped<IProjectService, ProjectService>();
         builder.Services.AddScoped<IWebSocketService, WebSocketService>();
+        builder.Services.AddScoped<IExecutedToolService, ExecutedToolService>();
+        builder.Services.AddSingleton<ObservableProcessResults>();
+
+        // Add repository
         builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+        builder.Services.AddScoped<IExecutedToolRepository, ExecutedToolRepository>();
+
+
         builder.Services.AddScoped<ToolsDataJSON>();
         builder.Services.AddScoped<ProjectEntityBuilder>();
         builder.Services.AddScoped<PmiDbContext>();
@@ -41,10 +50,12 @@ public class Program
 
 
         var app = builder.Build();
+
         app.UseCors(x => x.AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                     );
+
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {

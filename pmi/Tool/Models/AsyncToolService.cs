@@ -5,7 +5,6 @@ namespace pmi.Tool.Models;
 
 public abstract class AsyncToolService : IToolService
 {
-    public AsyncToolService() { }
 
     public virtual async Task ExecuteToolViaWebSocket(HttpContext context)
     {

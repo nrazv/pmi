@@ -13,7 +13,7 @@ public class ProjectEntityBuilder
             Id = projectId,
             Name = p.Name,
             DomainName = p.DomainName ?? string.Empty,
-            IpAddress = p.IpAddress,
+            IpAddress = p.IpAddress ?? string.Empty,
             ProjectInfo = new ProjectInfo
             {
                 Id = Guid.NewGuid().ToString(),
