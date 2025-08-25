@@ -6,6 +6,8 @@ using pmi.Project.Repository;
 using pmi.Project.Builders;
 using pmi.ExecutedTool.Models;
 using pmi.ExecutedTool;
+using Microsoft.AspNetCore.Mvc;
+using pmi.Utilities;
 
 namespace pmi.Project.Services;
 
@@ -40,12 +42,25 @@ public class ProjectService : IProjectService
         return projects.ToList();
     }
 
-    public async Task<ProjectEntity> NewProject(CreateProjectDto p)
+    public async Task<OperationResult<ProjectEntity>> NewProject(CreateProjectDto p)
     {
+        if (string.IsNullOrEmpty(p.IpAddress) && string.IsNullOrEmpty(p.DomainName))
+        {
+            return OperationResult<ProjectEntity>.Failure("IpAddress or domainName is required.");
+        }
+
+        var project = await repository.Get(project => project.Name == p.Name);
+
+        if (project is ProjectEntity)
+        {
+            return OperationResult<ProjectEntity>.Failure("A project with the same name already exists.");
+        }
+
         var newProjectEntity = entityBuilder.createNewProjectEntity(p);
         await repository.Add(newProjectEntity);
         await repository.Save();
-        return newProjectEntity;
+
+        return OperationResult<ProjectEntity>.Successful(newProjectEntity);
     }
 
     public async Task AddExecutedTool(string projectId, ExecutedToolEntity executedTool)

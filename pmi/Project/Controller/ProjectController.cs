@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using pmi.Project.Models;
 using pmi.Project.Services;
@@ -29,14 +28,15 @@ public class ProjectController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> NewProject(CreateProjectDto project)
     {
-        if (string.IsNullOrEmpty(project.IpAddress) && string.IsNullOrEmpty(project.DomainName))
+        var result = await _projectService.NewProject(project);
+
+        if (result.Success is false)
         {
-            return BadRequest();
+            return BadRequest(new { message = result.ErrorMessage });
         }
         else
         {
-            ProjectEntity newProject = await _projectService.NewProject(project);
-            ProjectDto projectDto = _mapper.Map<ProjectDto>(newProject);
+            ProjectDto projectDto = _mapper.Map<ProjectDto>(result.Entity);
             return CreatedAtAction(nameof(NewProject), projectDto);
         }
     }
