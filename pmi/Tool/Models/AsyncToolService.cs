@@ -6,12 +6,12 @@ namespace pmi.Tool.Models;
 public abstract class AsyncToolService : IToolService
 {
 
-    public virtual async Task ExecuteToolViaWebSocket(HttpContext context)
+    public virtual void ExecuteToolViaWebSocket(HttpContext context)
     {
         throw new NotImplementedException();
     }
 
-    public virtual async Task GetExecutedToolViaWebSocket(HttpContext context)
+    public virtual void GetExecutedToolViaWebSocket(HttpContext context)
     {
         throw new NotImplementedException();
     }

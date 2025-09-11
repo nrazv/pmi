@@ -24,7 +24,7 @@ public class ExecutedToolService : IExecutedToolService
 
     public async Task<ExecutedToolEntity?> GetById(string id)
     {
-        return await repository.Get(e => e.Id == id);
+        return await repository.Get(e => e.Id.Equals(id));
     }
 
     public async Task<ExecutedToolEntity?> GetByName(string name)

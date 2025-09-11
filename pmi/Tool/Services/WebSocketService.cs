@@ -11,7 +11,7 @@ public class WebSocketService : IWebSocketService
 {
     private readonly ToolWSMapper toolWSMapper;
 
-    private readonly ProcessManager processManager;
+    private readonly ProcessManager processManager = null!;
     private readonly ObservableProcessResults processResults;
 
 

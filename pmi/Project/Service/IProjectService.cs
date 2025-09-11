@@ -1,7 +1,7 @@
 ﻿using pmi.ExecutedTool.Models;
 using pmi.Project.Models;
 using pmi.Utilities;
-namespace pmi.Project.Services;
+namespace pmi.Project.Service;
 
 public interface IProjectService
 {
@@ -17,4 +17,5 @@ public interface IProjectService
 
     public List<ExecutedToolEntity> GetExecutedToolEntitiesByProjectName(string projectName);
 
+    public Task<OperationResult<string>> DeleteById(Guid id);
 }

@@ -7,7 +7,7 @@ namespace pmi.Utilities;
 public static class ProjectFactory
 {
 
-    public static ExecutedToolEntity CreateExecutedToolFromExecutionRequest(ToolExecutionRequest request, ProjectEntity project, string toolId, string? runnerId)
+    public static ExecutedToolEntity CreateExecutedToolFromExecutionRequest(ToolExecutionRequest request, ProjectEntity project, Guid toolId, string? runnerId)
     {
         return new ExecutedToolEntity
         {

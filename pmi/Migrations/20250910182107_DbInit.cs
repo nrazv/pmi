@@ -6,52 +6,31 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace pmi.Migrations
 {
     /// <inheritdoc />
-    public partial class Init_Models : Migration
+    public partial class DbInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ProjectsInfo",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    LastUpdated = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Status = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProjectsInfo", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     DomainName = table.Column<string>(type: "TEXT", nullable: true),
-                    IpAddress = table.Column<string>(type: "TEXT", nullable: true),
-                    ProjectInfoId = table.Column<string>(type: "TEXT", nullable: true)
+                    IpAddress = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Projects", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Projects_ProjectsInfo_ProjectInfoId",
-                        column: x => x.ProjectInfoId,
-                        principalTable: "ProjectsInfo",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "ExecutedTools",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    ProjectId = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     ToolArguments = table.Column<string>(type: "TEXT", nullable: false),
                     Target = table.Column<string>(type: "TEXT", nullable: false),
@@ -73,6 +52,28 @@ namespace pmi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ProjectsInfo",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastUpdated = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectsInfo", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectsInfo_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_ExecutedTools_ProjectId",
                 table: "ExecutedTools",
@@ -85,9 +86,10 @@ namespace pmi.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_ProjectInfoId",
-                table: "Projects",
-                column: "ProjectInfoId");
+                name: "IX_ProjectsInfo_ProjectId",
+                table: "ProjectsInfo",
+                column: "ProjectId",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -97,10 +99,10 @@ namespace pmi.Migrations
                 name: "ExecutedTools");
 
             migrationBuilder.DropTable(
-                name: "Projects");
+                name: "ProjectsInfo");
 
             migrationBuilder.DropTable(
-                name: "ProjectsInfo");
+                name: "Projects");
         }
     }
 }

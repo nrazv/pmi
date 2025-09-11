@@ -17,16 +17,7 @@ public class ProjectInfo
     [Required]
     public ProjectStatus Status { get; set; }
 
-
-    public ProjectInfo() { }
-    public ProjectInfo(string id, string name, DateTime createdDate, DateTime? lastUpdated, ProjectStatus status)
-    {
-        Id = id;
-        Name = name;
-        CreatedDate = createdDate;
-        LastUpdated = lastUpdated;
-        Status = status;
-    }
-
+    public Guid ProjectId { get; set; }
+    public ProjectEntity Project { get; set; } = null!;
 
 }

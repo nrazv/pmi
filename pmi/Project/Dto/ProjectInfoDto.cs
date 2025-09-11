@@ -1,3 +1,3 @@
 namespace pmi.Project.Models;
 
-public record ProjectInfoDto(string Id, string Name, DateTime CreatedDate, DateTime? LastUpdated, string Status);
+public record ProjectInfoDto(string Name, DateTime CreatedDate, DateTime? LastUpdated, string Status);

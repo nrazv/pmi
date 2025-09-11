@@ -104,10 +104,11 @@ public class ProcessManager
         }
     }
 
-    public async Task HandleProcessExited(Process process, ToolExecutionRequest request)
+    public Task HandleProcessExited(Process process, ToolExecutionRequest request)
     {
         WriteLine($"Process with id {process.Id} has exited.");
         WriteLine($"Closing {nameof(WebSocket)} connection");
+        return Task.CompletedTask;
     }
 
 }

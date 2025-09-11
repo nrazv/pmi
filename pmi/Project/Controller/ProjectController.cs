@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using pmi.Project.Models;
-using pmi.Project.Services;
+using pmi.Project.Service;
 
 namespace pmi.Project.Controller;
 
@@ -47,7 +47,24 @@ public class ProjectController : ControllerBase
     {
         var response = await _projectService.GetProjects();
         return _mapper.Map<List<ProjectDto>>(response);
+    }
 
+
+    [HttpDelete("{Id}", Name = "Delete project by id")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProjectDto>(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteProject(Guid Id)
+    {
+        var result = await _projectService.DeleteById(Id);
+
+        if (result.Success is false)
+        {
+            return BadRequest(new { message = result.ErrorMessage });
+        }
+        else
+        {
+            return NoContent();
+        }
     }
 
 }

@@ -30,7 +30,9 @@ function ProjectTabs({ project }: ProjectTabsProps) {
       </Tabs>
 
       <CustomTabPanel value={tabIndex} index={0}>
-        {project && <ProjectInfoPanel projectInfo={project.projectInfo} />}
+        {project?.projectInfo && (
+          <ProjectInfoPanel projectInfo={project.projectInfo} />
+        )}
       </CustomTabPanel>
 
       <CustomTabPanel value={tabIndex} index={1}>

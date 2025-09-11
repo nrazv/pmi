@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using pmi.ExecutedTool.Models;
+using pmi.ModelsConfiguration;
 using pmi.Project.Models;
 
 
@@ -21,21 +22,11 @@ public class PmiDbContext : DbContext
         optionsBuilder.UseSqlite(connectionString);
     }
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder
-           .Entity<ProjectInfo>()
-           .Property(e => e.Status)
-           .HasConversion(
-            v => v.ToString(),
-            v => (ProjectStatus)Enum.Parse(typeof(ProjectStatus), v)
-       );
 
-        modelBuilder.Entity<ExecutedToolEntity>()
-            .Property(e => e.Status)
-            .HasConversion(
-                v => v.ToString(),
-                v => (ExecutionStatus)Enum.Parse(typeof(ExecutionStatus), v)
-            );
+        modelBuilder.ApplyConfiguration(new ProjectEntityConfiguration());
+        base.OnModelCreating(modelBuilder);
     }
 }

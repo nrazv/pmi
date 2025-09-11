@@ -1,39 +1,24 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using pmi.Project.Models;
 using pmi.Data;
 using pmi.Project.Repository;
-using pmi.Project.Builders;
 using pmi.ExecutedTool.Models;
 using pmi.ExecutedTool;
-using Microsoft.AspNetCore.Mvc;
 using pmi.Utilities;
 
-namespace pmi.Project.Services;
+namespace pmi.Project.Service;
 
 public class ProjectService : IProjectService
 {
     private readonly PmiDbContext _pmiDb;
     private readonly IProjectRepository repository;
     private readonly IExecutedToolRepository executedToolRepository;
-    private readonly IMapper _mapper;
-    private readonly ProjectEntityBuilder entityBuilder;
 
-    public ProjectService(IConfiguration configuration, IProjectRepository projectRepository, ProjectEntityBuilder entityBuilder, IExecutedToolRepository executedToolRepository)
+    public ProjectService(IProjectRepository projectRepository, IExecutedToolRepository executedToolRepository)
     {
-        this.entityBuilder = entityBuilder;
         this.executedToolRepository = executedToolRepository;
         repository = projectRepository;
-        string projectFolder = configuration.GetSection("RootFolder").Value ?? "projects";
         _pmiDb = new PmiDbContext();
-        _mapper = new Mapper(new MapperConfiguration(conf =>
-        {
-            conf.CreateMap<ProjectInfo, ProjectInfoDto>()
-            .ForMember(dest => dest.Status,
-                opt => opt.MapFrom(src => src.Status.ToString()));
-
-            conf.CreateMap<ProjectEntity, ProjectDto>();
-        }));
     }
 
     public async Task<List<ProjectEntity>> GetProjects()
@@ -42,21 +27,36 @@ public class ProjectService : IProjectService
         return projects.ToList();
     }
 
-    public async Task<OperationResult<ProjectEntity>> NewProject(CreateProjectDto p)
+    public async Task<OperationResult<ProjectEntity>> NewProject(CreateProjectDto request)
     {
-        if (string.IsNullOrEmpty(p.IpAddress) && string.IsNullOrEmpty(p.DomainName))
+        if (string.IsNullOrEmpty(request.IpAddress) && string.IsNullOrEmpty(request.DomainName))
         {
             return OperationResult<ProjectEntity>.Failure("IpAddress or domainName is required.");
         }
 
-        var project = await repository.Get(project => project.Name == p.Name);
+        var project = await repository.Get(project => project.Name == request.Name);
 
         if (project is ProjectEntity)
         {
             return OperationResult<ProjectEntity>.Failure("A project with the same name already exists.");
         }
 
-        var newProjectEntity = entityBuilder.createNewProjectEntity(p);
+        ProjectEntity newProjectEntity = new ProjectEntity
+        {
+            Name = request.Name,
+            DomainName = request.DomainName ?? string.Empty,
+            IpAddress = request.IpAddress ?? string.Empty,
+            ProjectInfo = new ProjectInfo
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = request.Name,
+                CreatedDate = DateTime.Now,
+                LastUpdated = DateTime.Now,
+                Status = ProjectStatus.NotStarted,
+
+            }
+        };
+
         await repository.Add(newProjectEntity);
         await repository.Save();
 
@@ -65,14 +65,14 @@ public class ProjectService : IProjectService
 
     public async Task AddExecutedTool(string projectId, ExecutedToolEntity executedTool)
     {
-        var project = await repository.Get(p => p.Id == projectId);
+        var project = await repository.Get(p => p.Id.Equals(p.Id));
         project?.ExecutedTools.Add(executedTool);
         _pmiDb.SaveChanges();
     }
 
     public async Task<ProjectEntity?> GetById(string id)
     {
-        return await repository.Get(p => p.Id == id);
+        return await repository.Get(p => p.Id.Equals(p.Id));
     }
 
     public async Task<ProjectEntity?> GetByName(string name)
@@ -99,12 +99,12 @@ public class ProjectService : IProjectService
     {
         try
         {
-            return _pmiDb.ExecutedTools.Where((e) => e.Id == id).FirstOrDefault();
+            return _pmiDb.ExecutedTools.Where((e) => e.Id.Equals(id)).FirstOrDefault();
 
         }
         catch (Exception e)
         {
-
+            Console.WriteLine(e.Message);
         }
 
         return null;
@@ -113,7 +113,6 @@ public class ProjectService : IProjectService
     public void AddNewExecutedTool(ExecutedToolEntity executedTool)
     {
         executedToolRepository.Add(executedTool);
-
     }
 
     public List<ExecutedToolEntity> GetExecutedToolEntitiesByProjectName(string projectName)
@@ -121,5 +120,26 @@ public class ProjectService : IProjectService
         return _pmiDb.ExecutedTools.Include(et => et.Project)
                 .Where(et => et.Project.Name == projectName)
                 .ToList();
+    }
+
+    public async Task<OperationResult<string>> DeleteById(Guid id)
+    {
+        var project = await GetById(id.ToString());
+
+        if (project is null)
+        {
+            return OperationResult<string>.Failure($"Resource with ID {id} not found.");
+        }
+
+        var response = await repository.Delete(project);
+
+        if (response > 0)
+        {
+            return OperationResult<string>.Successful("Ok");
+        }
+        else
+        {
+            return OperationResult<string>.Failure($"Resource with ID {id} not found.");
+        }
     }
 }

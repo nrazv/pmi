@@ -5,15 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using pmi.Data;
-using pmi.DataContext;
 
 #nullable disable
 
 namespace pmi.Migrations
 {
     [DbContext(typeof(PmiDbContext))]
-    [Migration("20250707135946_ConvertEnumToString")]
-    partial class ConvertEnumToString
+    [Migration("20250910182107_DbInit")]
+    partial class DbInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,9 +20,10 @@ namespace pmi.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
 
-            modelBuilder.Entity("pmi.Project.Models.ExecutedToolEntity", b =>
+            modelBuilder.Entity("pmi.ExecutedTool.Models.ExecutedToolEntity", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ClientId")
@@ -42,15 +42,14 @@ namespace pmi.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ProjectId")
-                        .IsRequired()
+                    b.Property<Guid>("ProjectId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RunnerId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("Status")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Target")
                         .IsRequired()
@@ -69,7 +68,8 @@ namespace pmi.Migrations
 
             modelBuilder.Entity("pmi.Project.Models.ProjectEntity", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DomainName")
@@ -82,15 +82,10 @@ namespace pmi.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ProjectInfoId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
-
-                    b.HasIndex("ProjectInfoId");
 
                     b.ToTable("Projects");
                 });
@@ -110,16 +105,21 @@ namespace pmi.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<Guid>("ProjectId")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectId")
+                        .IsUnique();
 
                     b.ToTable("ProjectsInfo");
                 });
 
-            modelBuilder.Entity("pmi.Project.Models.ExecutedToolEntity", b =>
+            modelBuilder.Entity("pmi.ExecutedTool.Models.ExecutedToolEntity", b =>
                 {
                     b.HasOne("pmi.Project.Models.ProjectEntity", "Project")
                         .WithMany("ExecutedTools")
@@ -130,18 +130,23 @@ namespace pmi.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("pmi.Project.Models.ProjectEntity", b =>
+            modelBuilder.Entity("pmi.Project.Models.ProjectInfo", b =>
                 {
-                    b.HasOne("pmi.Project.Models.ProjectInfo", "ProjectInfo")
-                        .WithMany()
-                        .HasForeignKey("ProjectInfoId");
+                    b.HasOne("pmi.Project.Models.ProjectEntity", "Project")
+                        .WithOne("ProjectInfo")
+                        .HasForeignKey("pmi.Project.Models.ProjectInfo", "ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("ProjectInfo");
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("pmi.Project.Models.ProjectEntity", b =>
                 {
                     b.Navigation("ExecutedTools");
+
+                    b.Navigation("ProjectInfo")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

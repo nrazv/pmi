@@ -21,10 +21,10 @@ public class Repository<T> : IRepository<T> where T : class
         await dbSet.AddAsync(entity);
     }
 
-    public async Task Delete(T entity)
+    public async Task<int> Delete(T entity)
     {
         dbSet.Remove(entity);
-        await dbContext.SaveChangesAsync();
+        return await dbContext.SaveChangesAsync();
     }
 
     public async Task DeleteRange(IEnumerable<T> range)
@@ -40,7 +40,7 @@ public class Repository<T> : IRepository<T> where T : class
         return query.FirstOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<T>> GetAll()
+    public virtual async Task<IEnumerable<T>> GetAll()
     {
         IQueryable<T> query = dbSet;
         return await query.ToListAsync();

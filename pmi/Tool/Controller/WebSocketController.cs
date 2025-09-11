@@ -19,13 +19,13 @@ public class WebSocketController : Controller
 
 
     [HttpGet]
-    public async Task Get()
+    public void Get()
     {
         var context = ControllerContext.HttpContext;
 
         if (context.WebSockets.IsWebSocketRequest)
         {
-            await _toolService.ExecuteToolViaWebSocket(context);
+            _toolService.ExecuteToolViaWebSocket(context);
         }
         else
         {

@@ -58,10 +58,8 @@ function ToolExecutionPanel({ project }: Props) {
   }, []);
 
   return (
-    <Box sx={{ height: "75vh" }}>
-      <FormControl
-        sx={{ display: "flex", flexDirection: "row", marginBottom: 2 }}
-      >
+    <Box>
+      <FormControl sx={{ display: "flex", flexDirection: "row" }}>
         <CustomSelectMenu
           handleSelectionChange={handleTargetChange}
           menuItems={targets}
@@ -76,7 +74,7 @@ function ToolExecutionPanel({ project }: Props) {
           handleToolArgumentsChange={handleToolArgumentsChange}
         />
       </FormControl>
-      <RunningToolsContainer project={project} />
+      {/* <RunningToolsContainer project={project} /> */}
     </Box>
   );
 }
