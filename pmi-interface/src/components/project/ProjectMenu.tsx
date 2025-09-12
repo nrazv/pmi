@@ -1,39 +1,81 @@
-import { IconButton, Menu, MenuItem, Typography } from "@mui/material";
+import { IconButton, Menu, MenuItem } from "@mui/material";
+import React, { useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import React from "react";
-import NewProjectDialog from "./NewProjectDialog";
+import ConfirmationDialog from "../ConfirmationDialog";
 
-function ProjectMenu() {
+type Props = {
+  projectId: string;
+};
+
+function ProjectMenu({ projectId }: Props) {
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+  const handleClose = () => setAnchorEl(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>) =>
     setAnchorEl(event.currentTarget);
+
+  const MenuItems = (
+    <MenuItem onClick={() => setOpenDeleteDialog(true)}>Delete</MenuItem>
+  );
+
+  const deleteProjectById = async (id: string) => {
+    const requestOptions = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Host: "localhost:8080",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/project/${id}`,
+        requestOptions
+      );
+      console.log(response);
+
+      if (response.status === 200 || response.status === 204) {
+        console.log("Project deleted successfully");
+      } else {
+        console.error("Failed to delete project:", response.status);
+      }
+    } catch (error) {
+      console.error("Error deleting project:", error);
+    }
+
+    setOpenDeleteDialog(false);
   };
 
-  const handleClose = () => setAnchorEl(null);
-  const handelOpenDialog = () => setOpenDialog(true);
-  const handelCloseDialog = () => setOpenDialog(false);
-
   return (
-    <div>
-      <IconButton onClick={handleClick}>
+    <>
+      <IconButton
+        aria-label="more"
+        id="long-button"
+        aria-controls={open ? "long-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
         <MoreVertIcon />
       </IconButton>
       <Menu
-        id="project-menu"
+        id="long-menu"
         anchorEl={anchorEl}
-        onClose={handleClose}
         open={open}
+        onClose={handleClose}
       >
-        <MenuItem onClick={handelOpenDialog}>
-          <Typography variant="caption" fontWeight={600}>
-            New Project
-          </Typography>
-        </MenuItem>
+        {MenuItems}
       </Menu>
-      <NewProjectDialog open={openDialog} close={handelCloseDialog} />
-    </div>
+      <ConfirmationDialog
+        open={openDeleteDialog}
+        confirmAction={() => deleteProjectById(projectId)}
+        cancelAction={() => setOpenDeleteDialog(false)}
+        title="Delete project"
+        textContent="Are you sure you want to delete this item?"
+      />
+    </>
   );
 }
 

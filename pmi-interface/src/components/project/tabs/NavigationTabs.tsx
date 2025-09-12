@@ -3,15 +3,15 @@ import React from "react";
 import { Project } from "../../../models/Project";
 import TerminalIcon from "@mui/icons-material/Terminal";
 import CustomTabPanel from "./CustomTabPanel";
-import ProjectInfoPanel from "../ProjectInfoPanel";
-import ToolExecutionPanel from "../ToolExecutionPanel";
+import ProjectInfo from "../ProjectInfo";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
+import ExecutionManagerTab from "./ExecutionManagerTab";
 
 type ProjectTabsProps = {
   project: Project | undefined;
 };
 
-function ProjectTabs({ project }: ProjectTabsProps) {
+function NavigationTabs({ project }: ProjectTabsProps) {
   const [tabIndex, setTabIndex] = React.useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
@@ -31,15 +31,15 @@ function ProjectTabs({ project }: ProjectTabsProps) {
 
       <CustomTabPanel value={tabIndex} index={0}>
         {project?.projectInfo && (
-          <ProjectInfoPanel projectInfo={project.projectInfo} />
+          <ProjectInfo projectInfo={project.projectInfo} />
         )}
       </CustomTabPanel>
 
       <CustomTabPanel value={tabIndex} index={1}>
-        {project && <ToolExecutionPanel project={project} />}
+        {project && <ExecutionManagerTab project={project} />}
       </CustomTabPanel>
     </>
   );
 }
 
-export default ProjectTabs;
+export default NavigationTabs;

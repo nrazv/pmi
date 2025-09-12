@@ -15,7 +15,7 @@ type Props = {
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
-function NewProjectDialog({ open, close }: Props) {
+function CreateProjectDialog({ open, close }: Props) {
   const [name, setName] = useState<string>("");
   const [domainName, setDomainName] = useState<string>("");
   const [ipAddress, setIpAddress] = useState<string>("");
@@ -111,4 +111,4 @@ function NewProjectDialog({ open, close }: Props) {
   );
 }
 
-export default NewProjectDialog;
+export default CreateProjectDialog;

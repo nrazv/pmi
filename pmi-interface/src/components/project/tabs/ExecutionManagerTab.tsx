@@ -1,18 +1,16 @@
 import { Box, FormControl, SelectChangeEvent } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Project } from "../../models/Project";
-import CustomSelectMenu from "../SelectTarget";
-import ToolRunner from "../ToolRunner";
-import RunningToolsContainer from "./runningTools/RunningToolsContainer";
-import { ToolExecuteRequest } from "../../models/ToolExecuteRequest";
-import useWebSocket from "react-use-websocket";
-import { executeTool } from "../../services/ApiService";
+import { ToolExecuteRequest } from "../../../models/ToolExecuteRequest";
+import { Project } from "../../../models/Project";
+import { executeTool } from "../../../services/ApiService";
+import CustomSelectMenu from "../../SelectTarget";
+import ToolRunner from "../../ToolRunner";
 
 type Props = {
   project: Project;
 };
 
-function ToolExecutionPanel({ project }: Props) {
+function ExecutionManagerTab({ project }: Props) {
   const [executionRequest, setRequest] = useState<ToolExecuteRequest>({
     target: "",
     tool: "",
@@ -79,4 +77,4 @@ function ToolExecutionPanel({ project }: Props) {
   );
 }
 
-export default ToolExecutionPanel;
+export default ExecutionManagerTab;

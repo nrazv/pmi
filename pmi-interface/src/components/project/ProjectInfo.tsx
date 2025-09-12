@@ -1,12 +1,12 @@
 import { Box, Typography } from "@mui/material";
 import DateTimeFormat from "../../utils/DateTimeFormat";
-import { ProjectInfo } from "../../models/ProjectInfo";
+import { ProjectInformation } from "../../models/ProjectInfo";
 
 type ProjectInfoPanelProps = {
-  projectInfo: ProjectInfo;
+  projectInfo: ProjectInformation;
 };
 
-function ProjectInfoPanel({ projectInfo }: ProjectInfoPanelProps) {
+function ProjectInfo({ projectInfo }: ProjectInfoPanelProps) {
   const createdDate = new Date(projectInfo.createdDate);
   const lastUpdated = new Date(projectInfo.lastUpdated);
   return (
@@ -30,4 +30,4 @@ function ProjectInfoPanel({ projectInfo }: ProjectInfoPanelProps) {
   );
 }
 
-export default ProjectInfoPanel;
+export default ProjectInfo;
