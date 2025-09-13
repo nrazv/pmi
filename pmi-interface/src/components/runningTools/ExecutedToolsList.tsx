@@ -1,10 +1,10 @@
 import ListItem from "@mui/material/ListItem";
 import { Chip, List, ListItemButton, Typography } from "@mui/material";
-import { fetchExecutedToolsForProject } from "../../../services/ApiService";
 import { useQuery } from "@tanstack/react-query";
-import { Project } from "../../../models/Project";
 import React, { ReactElement, useState } from "react";
-import { ExecutedTool } from "../../../models/ExecutedTool";
+import { Project } from "../../models/Project";
+import { ExecutedTool } from "../../models/ExecutedTool";
+import { fetchExecutedToolsForProject } from "../../services/ApiService";
 
 type Props = {
   project: Project;

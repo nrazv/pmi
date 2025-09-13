@@ -5,7 +5,7 @@ import TerminalIcon from "@mui/icons-material/Terminal";
 import CustomTabPanel from "./CustomTabPanel";
 import ProjectInfo from "../ProjectInfo";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
-import ExecutionManagerTab from "./ExecutionManagerTab";
+import ExecutionManagerTab from "../ExecutionManagerTab";
 
 type ProjectTabsProps = {
   project: Project | undefined;

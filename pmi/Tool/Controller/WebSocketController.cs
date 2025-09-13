@@ -9,23 +9,21 @@ namespace pmi.Tool;
 
 public class WebSocketController : Controller
 {
-    private AsyncToolService _toolService;
     private readonly IWebSocketService webSocketService;
-    public WebSocketController(AsyncToolService toolService, IWebSocketService webSocketService)
+    public WebSocketController(IWebSocketService webSocketService)
     {
-        _toolService = toolService;
         this.webSocketService = webSocketService;
     }
 
 
     [HttpGet]
-    public void Get()
+    public async void Get()
     {
         var context = ControllerContext.HttpContext;
 
         if (context.WebSockets.IsWebSocketRequest)
         {
-            _toolService.ExecuteToolViaWebSocket(context);
+            await webSocketService.ExecuteToolViaWebSocket(context);
         }
         else
         {

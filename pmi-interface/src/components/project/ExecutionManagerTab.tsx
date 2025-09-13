@@ -1,10 +1,11 @@
 import { Box, FormControl, SelectChangeEvent } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { ToolExecuteRequest } from "../../../models/ToolExecuteRequest";
-import { Project } from "../../../models/Project";
-import { executeTool } from "../../../services/ApiService";
-import CustomSelectMenu from "../../SelectTarget";
-import ToolRunner from "../../ToolRunner";
+import { ToolExecuteRequest } from "../../models/ToolExecuteRequest";
+import { Project } from "../../models/Project";
+import { executeTool } from "../../services/ApiService";
+import CustomSelectMenu from "../SelectTarget";
+import ToolRunner from "../ToolRunner";
+import ToolsContainer from "../runningTools/ToolsContainer";
 
 type Props = {
   project: Project;
@@ -72,7 +73,7 @@ function ExecutionManagerTab({ project }: Props) {
           handleToolArgumentsChange={handleToolArgumentsChange}
         />
       </FormControl>
-      {/* <RunningToolsContainer project={project} /> */}
+      <ToolsContainer project={project} />
     </Box>
   );
 }

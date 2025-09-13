@@ -2,22 +2,22 @@ using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Text;
 using pmi.Tool.Mappers;
-using pmi.Tool.Models;
 using pmi.Tool.Managers;
 
 namespace pmi.Tool.Services;
 
 public class WebSocketService : IWebSocketService
 {
+    ILogger<Program> logger;
     private readonly ToolWSMapper toolWSMapper;
-
     private readonly ProcessManager processManager = null!;
     private readonly ObservableProcessResults processResults;
 
 
 
-    public WebSocketService(ObservableProcessResults processResults)
+    public WebSocketService(ObservableProcessResults processResults, ILogger<Program> logger)
     {
+        this.logger = logger;
         toolWSMapper = new ToolWSMapper();
         this.processResults = processResults;
     }
@@ -86,7 +86,7 @@ public class WebSocketService : IWebSocketService
         {
             process.ErrorDataReceived += (s, e) => _ = processManager.HandleErrorDataReceived(e, webSocket);
             process.Exited += (s, e) => _ = processManager.HandleProcessExited(process, request);
-            // process.OutputDataReceived += async (s, e) => await HandleOutputAsync(e, webSocket, executedToolId);
+            process.OutputDataReceived += async (s, e) => await HandleOutputAsync(e, webSocket, executedToolId);
             process.Start();
             process.BeginOutputReadLine();
             process.WaitForExit();

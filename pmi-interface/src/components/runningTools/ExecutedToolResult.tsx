@@ -1,7 +1,6 @@
 import useWebSocket from "react-use-websocket";
-import { ToolExecuteRequest } from "../../../models/ToolExecuteRequest";
-import { ExecutedTool } from "../../../models/ExecutedTool";
 import React, { useEffect, useState } from "react";
+import { ExecutedTool } from "../../models/ExecutedTool";
 
 const URL = process.env.REACT_APP_WS_URL ?? "";
 

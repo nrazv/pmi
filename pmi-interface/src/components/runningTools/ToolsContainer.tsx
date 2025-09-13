@@ -1,9 +1,9 @@
 import { Box } from "@mui/material";
 import ExecutedToolsList from "./ExecutedToolsList";
-import { Project } from "../../../models/Project";
 import { useState } from "react";
-import { ExecutedTool } from "../../../models/ExecutedTool";
 import ExecutedToolResult from "./ExecutedToolResult";
+import { Project } from "../../models/Project";
+import { ExecutedTool } from "../../models/ExecutedTool";
 
 const containerStyle = {
   display: "flex",
@@ -25,7 +25,7 @@ type Props = {
   project: Project;
 };
 
-function RunningToolsContainer({ project }: Props) {
+function ToolsContainer({ project }: Props) {
   const [executionResult, setExecutionResult] = useState<ExecutedTool>();
 
   const handelExecutedToolSelect = (executedTool: ExecutedTool) => {
@@ -49,4 +49,4 @@ function RunningToolsContainer({ project }: Props) {
   );
 }
 
-export default RunningToolsContainer;
+export default ToolsContainer;

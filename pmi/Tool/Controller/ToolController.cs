@@ -20,11 +20,11 @@ public class ToolController : ControllerBase
     }
 
 
-    [HttpPost("execute", Name = "Run a tool")]
-    public void StartTool(ToolExecutionRequest toolExecution)
-    {
-        _toolService.RunProcess(toolExecution);
-    }
+    // [HttpPost("execute", Name = "Run a tool")]
+    // public void StartTool(ToolExecutionRequest toolExecution)
+    // {
+    //     _toolService.RunProcess(toolExecution);
+    // }
 
 
     [HttpGet("installed", Name = "Get installed tools list")]
