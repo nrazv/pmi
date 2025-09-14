@@ -24,5 +24,5 @@ public class ExecutedToolEntity
     public string? ExecutionResult { get; set; } = string.Empty;
     public DateTime? ExecutedDated { get; set; }
     public DateTime? FinishedDated { get; set; }
-
+    public DateTime FinishedDate { get; internal set; }
 }

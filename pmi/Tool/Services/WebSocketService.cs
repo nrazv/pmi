@@ -67,59 +67,5 @@ public class WebSocketService : IWebSocketService
 
     }
 
-    public async Task ExecuteToolViaWebSocket(HttpContext context)
-    {
-        WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-        var request = await toolWSMapper.readRequestFromSocket(webSocket);
-
-        if (request is null)
-        {
-            return;
-        }
-
-        var process = processManager.CreateNewProcess(request);
-        string executedToolId = Guid.NewGuid().ToString();
-
-
-
-        try
-        {
-            process.ErrorDataReceived += (s, e) => _ = processManager.HandleErrorDataReceived(e, webSocket);
-            process.Exited += (s, e) => _ = processManager.HandleProcessExited(process, request);
-            process.OutputDataReceived += async (s, e) => await HandleOutputAsync(e, webSocket, executedToolId);
-            process.Start();
-            process.BeginOutputReadLine();
-            process.WaitForExit();
-        }
-        catch (Exception ex)
-        {
-            byte[] errorBytes = Encoding.UTF8.GetBytes($"Exception: {ex.Message}");
-            await webSocket.SendAsync(new ArraySegment<byte>(errorBytes), WebSocketMessageType.Text, true, CancellationToken.None);
-            WriteLine(ex.Message);
-            process.Dispose();
-        }
-        finally
-        {
-            var exitCode = process.ExitCode;
-            process.Dispose();
-            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing connection", CancellationToken.None);
-
-        }
-
-    }
-
-    private async Task HandleOutputAsync(DataReceivedEventArgs e, WebSocket webSocket, string toolId)
-    {
-        if (!string.IsNullOrEmpty(e.Data))
-        {
-            await processManager.HandleOutputAsync(e, webSocket);
-            // var executedTool = projectService.GetExecutedTooById(toolId);
-            // if (executedTool is not null)
-            // {
-            //     executedTool.ExecutionResult = $"{executedTool.ExecutionResult}\n {e.Data}";
-            //     projectService.UpdateExecutedToo(executedTool);
-            // }
-        }
-    }
 
 }

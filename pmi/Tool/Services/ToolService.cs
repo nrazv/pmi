@@ -7,12 +7,13 @@ using pmi.Project.Service;
 
 namespace pmi.Tool.Services;
 
-public class ToolService : AsyncToolService
+public class ToolService : IToolService
 {
 
     private readonly ProcessManager processManager;
     private readonly IProjectService projectService;
     private readonly ObservableProcessResults processResults;
+
 
     public ToolService(IProjectService projectService, ObservableProcessResults processResults)
     {
@@ -23,12 +24,14 @@ public class ToolService : AsyncToolService
 
 
 
-    public override void RunProcess(ToolExecutionRequest request)
+    public string RunTool(ToolExecutionRequest request)
     {
+        Guid id = Guid.NewGuid();
+        string executedToolId = id.ToString();
         var process = processManager.CreateNewProcess(request);
-        string executedToolId = Guid.NewGuid().ToString();
-        // createExecutedTool(request, executedToolId);
 
+
+        // await createExecutedTool(request, id);
         try
         {
             process.OutputDataReceived += (obj, dataArgs) =>
@@ -81,11 +84,11 @@ public class ToolService : AsyncToolService
             Write("Process Disposed");
             updateExecutedToolStatus(executedToolId, ExecutionStatus.Done);
         }
+
+        return executedToolId;
     }
 
-
-
-    public override List<ExecutedToolEntity> GetExecutedToolsByProjectName(string projectName)
+    public List<ExecutedToolEntity> GetExecutedToolsByProjectName(string projectName)
     {
         return projectService.GetExecutedToolEntitiesByProjectName(projectName);
     }
@@ -115,6 +118,6 @@ public class ToolService : AsyncToolService
     {
         var project = await projectService.GetByName(request.ProjectName);
         var executedTool = ProjectFactory.CreateExecutedToolFromExecutionRequest(toolId: executedToolId, request: request, project: project!, runnerId: null);
-        projectService.AddNewExecutedTool(executedTool);
+        await projectService.AddNewExecutedTool(executedTool);
     }
 }

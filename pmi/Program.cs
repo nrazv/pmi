@@ -1,4 +1,5 @@
 
+using System.Threading.Channels;
 using pmi.Data;
 using pmi.DataContext;
 using pmi.ExecutedTool;
@@ -28,13 +29,22 @@ public class Program
                               });
         });
 
+        // SignalR
+        builder.Services.AddSignalR();
+
+
+        // Channel for jobs
+        var channel = Channel.CreateUnbounded<ToolJob>();
+        builder.Services.AddSingleton(channel);
+
 
         // Add services
-        builder.Services.AddScoped<AsyncToolService, ToolService>();
+        builder.Services.AddScoped<IToolService, ToolService>();
         builder.Services.AddScoped<IProjectService, ProjectService>();
         builder.Services.AddScoped<IWebSocketService, WebSocketService>();
         builder.Services.AddScoped<IExecutedToolService, ExecutedToolService>();
         builder.Services.AddSingleton<ObservableProcessResults>();
+        builder.Services.AddHostedService<ToolExecutionBackgroundService>();
 
         // Add repository
         builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
@@ -67,6 +77,7 @@ public class Program
         app.UseHttpsRedirection();
         app.UseAuthorization();
         app.MapControllers();
+        app.MapHub<ToolHub>("/toolhub");
         app.UseSwagger();
         app.UseSwaggerUI();
         app.UseWebSockets();

@@ -10,28 +10,15 @@ namespace pmi.Tool;
 public class WebSocketController : Controller
 {
     private readonly IWebSocketService webSocketService;
-    public WebSocketController(IWebSocketService webSocketService)
+    private IToolService _toolService;
+    public WebSocketController(IWebSocketService webSocketService, IToolService toolService)
     {
+        _toolService = toolService;
         this.webSocketService = webSocketService;
     }
 
 
-    [HttpGet]
-    public async void Get()
-    {
-        var context = ControllerContext.HttpContext;
-
-        if (context.WebSockets.IsWebSocketRequest)
-        {
-            await webSocketService.ExecuteToolViaWebSocket(context);
-        }
-        else
-        {
-            context.Response.StatusCode = StatusCodes.Status400BadRequest;
-        }
-    }
-
-    [HttpGet("toolResult")]
+    [HttpGet("toolOutput")]
     public async Task GetResult()
     {
         var context = ControllerContext.HttpContext;

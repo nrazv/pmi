@@ -110,9 +110,9 @@ public class ProjectService : IProjectService
         return null;
     }
 
-    public void AddNewExecutedTool(ExecutedToolEntity executedTool)
+    public async Task AddNewExecutedTool(ExecutedToolEntity executedTool)
     {
-        executedToolRepository.Add(executedTool);
+        await executedToolRepository.Add(executedTool);
     }
 
     public List<ExecutedToolEntity> GetExecutedToolEntitiesByProjectName(string projectName)

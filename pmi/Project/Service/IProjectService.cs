@@ -13,7 +13,7 @@ public interface IProjectService
 
     public ExecutedToolEntity UpdateExecutedToo(ExecutedToolEntity executedTool);
     public ExecutedToolEntity? GetExecutedTooById(string id);
-    public void AddNewExecutedTool(ExecutedToolEntity executedTool);
+    public Task AddNewExecutedTool(ExecutedToolEntity executedTool);
 
     public List<ExecutedToolEntity> GetExecutedToolEntitiesByProjectName(string projectName);
 
