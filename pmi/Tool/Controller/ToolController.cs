@@ -49,8 +49,8 @@ public class ToolController : ControllerBase
     }
 
     [HttpGet("executed/{projectName}", Name = "Get executed tool for project")]
-    public List<ExecutedToolEntity> GetExecutedToolEntitiesForProject(string projectName)
+    public async Task<List<ExecutedToolEntity>> GetExecutedToolEntitiesForProject(string projectName)
     {
-        return _toolService.GetExecutedToolsByProjectName(projectName);
+        return await _toolService.GetExecutedToolsByProjectName(projectName);
     }
 }

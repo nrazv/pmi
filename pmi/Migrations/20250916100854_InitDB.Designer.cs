@@ -11,8 +11,8 @@ using pmi.Data;
 namespace pmi.Migrations
 {
     [DbContext(typeof(PmiDbContext))]
-    [Migration("20250910182107_DbInit")]
-    partial class DbInit
+    [Migration("20250916100854_InitDB")]
+    partial class InitDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,9 @@ namespace pmi.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ExecutionResult")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("FinishedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("FinishedDated")

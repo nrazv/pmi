@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace pmi.Migrations
 {
     /// <inheritdoc />
-    public partial class DbInit : Migration
+    public partial class InitDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,7 +39,8 @@ namespace pmi.Migrations
                     Status = table.Column<int>(type: "INTEGER", nullable: true),
                     ExecutionResult = table.Column<string>(type: "TEXT", nullable: true),
                     ExecutedDated = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    FinishedDated = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    FinishedDated = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    FinishedDate = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

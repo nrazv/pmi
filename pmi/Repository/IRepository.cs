@@ -10,4 +10,5 @@ public interface IRepository<T> where T : class
     Task Add(T entity);
     Task<int> Delete(T entity);
     Task DeleteRange(IEnumerable<T> range);
+    Task<IEnumerable<T>> GetAllWhere(Expression<Func<T, bool>> filter);
 }

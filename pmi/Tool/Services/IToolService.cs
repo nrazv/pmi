@@ -1,13 +1,10 @@
 ﻿using pmi.ExecutedTool.Models;
-using pmi.Project.Models;
-using pmi.Tool.Models;
 
 namespace pmi.Tool.Services
 {
     public interface IToolService
     {
-        public string RunTool(ToolExecutionRequest toolExecution);
+        public Task<List<ExecutedToolEntity>> GetExecutedToolsByProjectName(string projectName);
 
-        public List<ExecutedToolEntity> GetExecutedToolsByProjectName(string projectName);
     }
 }

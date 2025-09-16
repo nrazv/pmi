@@ -2,6 +2,7 @@
 using System.Threading.Channels;
 using Microsoft.AspNetCore.SignalR;
 using pmi.ExecutedTool.Models;
+using pmi.ExecutedTool.Service;
 using pmi.Project.Service;
 using pmi.Tool.Managers;
 using pmi.Tool.Models;
@@ -42,14 +43,15 @@ public class ToolExecutionBackgroundService : BackgroundService
     {
         // Create a new scope so DbContext and services are fresh for this background execution
         using var scope = _scopeFactory.CreateScope();
-        var projectService = scope.ServiceProvider.GetRequiredService<IProjectService>(); // your EF wrapper
-        // optionally a logger or other services...
+        var projectService = scope.ServiceProvider.GetRequiredService<IProjectService>();
+        var executedToolService = scope.ServiceProvider.GetRequiredService<IExecutedToolService>();
         var executionId = job.ExecutionId.ToString();
 
 
         var project = await projectService.GetByName(job.Request.ProjectName);
         var executedTool = ProjectFactory.CreateExecutedToolFromExecutionRequest(toolId: Guid.Parse(job.ExecutionId), request: job.Request, project: project!, runnerId: null);
-        await projectService.AddNewExecutedTool(executedTool);
+        await executedToolService.AddNew(executedTool);
+        // await projectService.AddNewExecutedTool(executedTool);
 
         var process = processManager.CreateNewProcess(job.Request);
 
@@ -61,8 +63,8 @@ public class ToolExecutionBackgroundService : BackgroundService
                 // send to SignalR group
                 await _hub.Clients.Group(executionId).SendAsync("ReceiveOutput", e.Data);
                 WriteLine($"DATA: {e.Data}");
-                // append to DB (get a fresh scoped service or reuse projectService)
-                // await AppendOutputAsync(projectService, executionId, e.Data);
+                var executedToolServiceI = scope.ServiceProvider.GetRequiredService<IExecutedToolService>();
+                await executedToolServiceI.UpdateExecutedToolOutput(executedTool.Id.ToString(), e.Data);
             }
         };
 

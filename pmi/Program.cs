@@ -41,9 +41,7 @@ public class Program
         // Add services
         builder.Services.AddScoped<IToolService, ToolService>();
         builder.Services.AddScoped<IProjectService, ProjectService>();
-        builder.Services.AddScoped<IWebSocketService, WebSocketService>();
         builder.Services.AddScoped<IExecutedToolService, ExecutedToolService>();
-        builder.Services.AddSingleton<ObservableProcessResults>();
         builder.Services.AddHostedService<ToolExecutionBackgroundService>();
 
         // Add repository

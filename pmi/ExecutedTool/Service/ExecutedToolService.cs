@@ -15,11 +15,18 @@ public class ExecutedToolService : IExecutedToolService
     public async Task AddNew(ExecutedToolEntity obj)
     {
         await repository.Add(obj);
+        await repository.Save();
     }
 
     public Task<List<ExecutedToolEntity>> GetAll()
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<List<ExecutedToolEntity>> GetAllByProjectName(string projectName)
+    {
+        var tools = await repository.GetAllWhere(p => p.Project.Name == projectName);
+        return tools.ToList();
     }
 
     public async Task<ExecutedToolEntity?> GetById(string id)
@@ -35,5 +42,16 @@ public class ExecutedToolService : IExecutedToolService
     public ExecutedToolEntity Update(ExecutedToolEntity obj)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task UpdateExecutedToolOutput(string toolId, string output)
+    {
+        var all = await repository.GetAll();
+
+        var tool = await repository.Get(t => t.Id.ToString() == toolId);
+        if (tool is null) { return; }
+        tool.ExecutionResult = $"{tool.ExecutionResult}\n {output}";
+        await repository.Add(tool);
+        await repository.Save();
     }
 }

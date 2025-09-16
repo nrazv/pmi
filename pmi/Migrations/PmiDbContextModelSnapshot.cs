@@ -32,6 +32,9 @@ namespace pmi.Migrations
                     b.Property<string>("ExecutionResult")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("FinishedDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("FinishedDated")
                         .HasColumnType("TEXT");
 
