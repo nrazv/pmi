@@ -1,5 +1,5 @@
 # Step 1: Base stage for runtime environment
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-noble AS base
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-noble AS base
 
 COPY install-tools.sh /tmp/install-tools.sh
 RUN chmod +x /tmp/install-tools.sh
@@ -10,7 +10,7 @@ EXPOSE 8080
 EXPOSE 8081
 
 # Step 2: Build stage to compile the application
-FROM mcr.microsoft.com/dotnet/sdk:8.0-noble AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0-noble AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["pmi.csproj", "."]

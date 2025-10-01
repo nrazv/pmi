@@ -11,4 +11,4 @@ services:
     container_name: pmi-app
     restart: unless-stopped
     volumes:
-      - ./bin/Debug/net8.0:/app
+      - ./bin/Debug/net9.0:/app

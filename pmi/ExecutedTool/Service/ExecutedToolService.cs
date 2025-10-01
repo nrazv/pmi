@@ -39,6 +39,11 @@ public class ExecutedToolService : IExecutedToolService
         return await repository.Get(e => e.Name == name);
     }
 
+    public async Task SaveChanges()
+    {
+        await repository.Save();
+    }
+
     public ExecutedToolEntity Update(ExecutedToolEntity obj)
     {
         throw new NotImplementedException();
@@ -46,12 +51,19 @@ public class ExecutedToolService : IExecutedToolService
 
     public async Task UpdateExecutedToolOutput(string toolId, string output)
     {
-        var all = await repository.GetAll();
-
-        var tool = await repository.Get(t => t.Id.ToString() == toolId);
+        var tool = await repository.Get(t => t.Id.Equals(Guid.Parse(toolId)));
         if (tool is null) { return; }
         tool.ExecutionResult = $"{tool.ExecutionResult}\n {output}";
-        await repository.Add(tool);
         await repository.Save();
+    }
+
+    public async Task UpdateStatus(string toolId, ExecutionStatus status)
+    {
+        var executedTool = await GetById(toolId);
+        if (executedTool is ExecutedToolEntity)
+        {
+            executedTool.Status = ExecutionStatus.Failed;
+            await SaveChanges();
+        }
     }
 }

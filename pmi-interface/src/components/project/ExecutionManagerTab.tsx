@@ -1,4 +1,4 @@
-import { Box, FormControl, SelectChangeEvent } from "@mui/material";
+import { Box, FormControl, Paper, SelectChangeEvent } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { ToolExecuteRequest } from "../../models/ToolExecuteRequest";
 import { Project } from "../../models/Project";
@@ -58,20 +58,24 @@ function ExecutionManagerTab({ project }: Props) {
 
   return (
     <Box>
-      <FormControl sx={{ display: "flex", flexDirection: "row" }}>
+      <FormControl
+        sx={{ display: "flex", flexDirection: "row", marginBottom: 2 }}
+      >
         <CustomSelectMenu
           handleSelectionChange={handleTargetChange}
           menuItems={targets}
           selectedValue={executionRequest.target}
           label="Target"
         />
-        <ToolRunner
-          toolArguments={executionRequest.arguments}
-          toolToExecute={executionRequest.tool}
-          handelClickButton={runTool}
-          handleToolChange={handleToolChange}
-          handleToolArgumentsChange={handleToolArgumentsChange}
-        />
+        <Box>
+          <ToolRunner
+            toolArguments={executionRequest.arguments}
+            toolToExecute={executionRequest.tool}
+            handelClickButton={runTool}
+            handleToolChange={handleToolChange}
+            handleToolArgumentsChange={handleToolArgumentsChange}
+          />
+        </Box>
       </FormControl>
       <ToolsContainer project={project} />
     </Box>

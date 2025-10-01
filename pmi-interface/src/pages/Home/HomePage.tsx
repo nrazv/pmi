@@ -2,9 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { fetchAllProjects } from "../../services/ApiService";
 import { Project } from "../../models/Project";
+import Box from "@mui/material/Box";
+import { Grid } from "@mui/material";
 import ProjectList from "../../components/project/ProjectsList/ProjectList";
 import NavigationTabs from "../../components/project/tabs/NavigationTabs";
-import Box from "@mui/material/Box";
 
 const HomePage = () => {
   const [selectedProject, setSelectedProject] = useState<Project>();
@@ -16,15 +17,47 @@ const HomePage = () => {
   });
 
   return (
-    <Box sx={{ height: "90vh", display: "flex" }}>
-      <Box sx={{ width: "12%", borderRight: "solid #e6e7e8" }}>
-        {data && (
-          <ProjectList selectProject={setSelectedProject} projects={data} />
-        )}
-      </Box>
-      <Box sx={{ flex: 1 }}>
-        {selectedProject && <NavigationTabs project={selectedProject} />}
-      </Box>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "91vh",
+        overflow: "hidden",
+      }}
+    >
+      <Grid
+        container
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "row",
+          overflow: "hidden",
+        }}
+      >
+        <Grid item xs={2} sx={{ overflowY: "auto", height: "100%" }}>
+          <Box
+            sx={{
+              padding: 2,
+              height: "100%",
+              borderRight: 1,
+            }}
+          >
+            {data && (
+              <ProjectList selectProject={setSelectedProject} projects={data} />
+            )}
+          </Box>
+        </Grid>
+        <Grid item flex={1} sx={{ overflowY: "hidden", height: "100%" }}>
+          <Box
+            sx={{
+              padding: 2,
+              height: "100%",
+            }}
+          >
+            {selectedProject && <NavigationTabs project={selectedProject} />}
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

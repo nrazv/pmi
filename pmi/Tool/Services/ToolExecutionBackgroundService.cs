@@ -3,6 +3,7 @@ using System.Threading.Channels;
 using Microsoft.AspNetCore.SignalR;
 using pmi.ExecutedTool.Models;
 using pmi.ExecutedTool.Service;
+using pmi.Project.Models;
 using pmi.Project.Service;
 using pmi.Tool.Managers;
 using pmi.Tool.Models;
@@ -41,30 +42,23 @@ public class ToolExecutionBackgroundService : BackgroundService
 
     private async Task HandleJobAsync(ToolJob job, CancellationToken cancellationToken)
     {
-        // Create a new scope so DbContext and services are fresh for this background execution
         using var scope = _scopeFactory.CreateScope();
         var projectService = scope.ServiceProvider.GetRequiredService<IProjectService>();
         var executedToolService = scope.ServiceProvider.GetRequiredService<IExecutedToolService>();
-        var executionId = job.ExecutionId.ToString();
+        string executionId = job.ExecutionId.ToString();
+        ProjectEntity? project = await projectService.GetByName(job.Request.ProjectName);
 
-
-        var project = await projectService.GetByName(job.Request.ProjectName);
+        if (project is null) { return; }
         var executedTool = ProjectFactory.CreateExecutedToolFromExecutionRequest(toolId: Guid.Parse(job.ExecutionId), request: job.Request, project: project!, runnerId: null);
         await executedToolService.AddNew(executedTool);
-        // await projectService.AddNewExecutedTool(executedTool);
 
         var process = processManager.CreateNewProcess(job.Request);
-
-        // Wire events
         process.OutputDataReceived += async (s, e) =>
         {
             if (e.Data is not null)
             {
-                // send to SignalR group
                 await _hub.Clients.Group(executionId).SendAsync("ReceiveOutput", e.Data);
-                WriteLine($"DATA: {e.Data}");
-                var executedToolServiceI = scope.ServiceProvider.GetRequiredService<IExecutedToolService>();
-                await executedToolServiceI.UpdateExecutedToolOutput(executedTool.Id.ToString(), e.Data);
+                await executedToolService.UpdateExecutedToolOutput(executionId, e.Data);
             }
         };
 
@@ -72,17 +66,17 @@ public class ToolExecutionBackgroundService : BackgroundService
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
+                await executedToolService.UpdateStatus(executionId, ExecutionStatus.Error);
                 await _hub.Clients.Group(executionId).SendAsync("ReceiveError", e.Data);
-                WriteLine($"ERROR: {e.Data}");
-                // await MarkFailedAsync(projectService, executionId, e.Data);
             }
         };
 
         var exitTcs = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        process.Exited += (s, e) =>
+        process.Exited += async (s, e) =>
         {
             exitTcs.TrySetResult(process.ExitCode);
+            await executedToolService.UpdateStatus(executionId, ExecutionStatus.Done);
         };
 
         try
@@ -107,7 +101,7 @@ public class ToolExecutionBackgroundService : BackgroundService
         catch (OperationCanceledException)
         {
             // cancellation requested
-            executedTool.Status = ExecutionStatus.Failed;
+            executedTool.Status = ExecutionStatus.Cancelled;
             executedTool.FinishedDate = DateTime.UtcNow;
             // await projectService.UpdateExecutedToolAsync(executedTool);
             await _hub.Clients.Group(executionId).SendAsync("StatusUpdate", ExecutionStatus.Failed.ToString());
@@ -128,19 +122,4 @@ public class ToolExecutionBackgroundService : BackgroundService
             process.Dispose();
         }
     }
-
-    // helper: append output to DB safely
-    // private static Task AppendOutputAsync(IProjectService projectService, string executionId, string output)
-    // {
-    //     // implement in your ProjectService: append text to the output column or write to separate table
-    //     // keep DB operations async
-    //     return projectService.AppendExecutionOutputAsync(executionId, output);
-    // }
-
-    // private static Task MarkFailedAsync(IProjectService projectService, string executionId, string error)
-    // {
-    //     return projectService.MarkExecutionFailedAsync(executionId, error);
-    // }
-
-
 }

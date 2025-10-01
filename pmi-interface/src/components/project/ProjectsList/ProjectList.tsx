@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Project } from "../../../models/Project";
 import {
   Box,
@@ -38,7 +38,16 @@ function ProjectList({ projects, selectProject }: Props) {
           <ListItemIcon>
             <FolderIcon fontSize="small" />
           </ListItemIcon>
-          <Typography variant="button" sx={{ color: "text.secondary" }}>
+          <Typography
+            variant="button"
+            sx={{
+              color: "text.secondary",
+              maxWidth: 200,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
             {project.name}
           </Typography>
           <Box sx={{ marginRight: 1, marginLeft: "auto" }}>
@@ -51,11 +60,7 @@ function ProjectList({ projects, selectProject }: Props) {
     return items;
   };
 
-  return (
-    <Box>
-      <List component="nav">{listItems()}</List>
-    </Box>
-  );
+  return <List component="nav">{listItems()}</List>;
 }
 
 export default ProjectList;

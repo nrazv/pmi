@@ -9,6 +9,7 @@ public class ProjectEntityConfiguration : IEntityTypeConfiguration<ProjectEntity
     public void Configure(EntityTypeBuilder<ProjectEntity> builder)
     {
         builder.Navigation(e => e.ProjectInfo).AutoInclude();
+        builder.Navigation(e => e.ExecutedTools).AutoInclude();
         builder.HasOne(e => e.ProjectInfo)
                .WithOne(e => e.Project)
                .HasForeignKey<ProjectInfo>(e => e.ProjectId)

@@ -14,5 +14,11 @@ public class ExecutedToolEntityConfiguration : IEntityTypeConfiguration<Executed
              v => v.ToString(),
              v => (ExecutionStatus)Enum.Parse(typeof(ExecutionStatus), v!)
          );
+
+        builder
+            .HasOne(et => et.Project)
+            .WithMany(p => p.ExecutedTools)
+            .HasForeignKey(et => et.ProjectId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
