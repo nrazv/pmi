@@ -1,22 +1,18 @@
 ﻿
-using pmi.Tool.Managers;
 using pmi.ExecutedTool.Models;
-using pmi.Project.Service;
 using pmi.ExecutedTool.Service;
-using System.Threading.Tasks;
 
 namespace pmi.Tool.Services;
 
 public class ToolService : IToolService
 {
 
-    private readonly IProjectService projectService;
+
     private readonly IExecutedToolService _executedToolService;
 
 
-    public ToolService(IProjectService projectService, IExecutedToolService executedToolService)
+    public ToolService(IExecutedToolService executedToolService)
     {
-        this.projectService = projectService;
         _executedToolService = executedToolService;
     }
 

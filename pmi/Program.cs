@@ -25,7 +25,10 @@ public class Program
             options.AddPolicy(name: MyAllowSpecificOrigins,
                               policy =>
                               {
-                                  policy.WithOrigins("http://localhost:3000");
+                                  policy.WithOrigins("http://localhost:3000")
+                                  .AllowAnyHeader()
+                                  .AllowAnyMethod()
+                                  .AllowCredentials();
                               });
         });
 
@@ -59,11 +62,6 @@ public class Program
 
         var app = builder.Build();
 
-        app.UseCors(x => x.AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                    );
-
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
@@ -71,6 +69,9 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        // Serve static files (React builds in wwwroot)
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
         app.UseCors(MyAllowSpecificOrigins);
         app.UseHttpsRedirection();
         app.UseAuthorization();

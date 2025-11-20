@@ -56,13 +56,12 @@ public class ExecutedToolService : IExecutedToolService
         tool.ExecutionResult = $"{tool.ExecutionResult}\n {output}";
         await repository.Save();
     }
-
     public async Task UpdateStatus(string toolId, ExecutionStatus status)
     {
-        var executedTool = await GetById(toolId);
+        var executedTool = await repository.Get(t => t.Id.Equals(Guid.Parse(toolId)));
         if (executedTool is ExecutedToolEntity)
         {
-            executedTool.Status = ExecutionStatus.Failed;
+            executedTool.Status = status;
             await SaveChanges();
         }
     }

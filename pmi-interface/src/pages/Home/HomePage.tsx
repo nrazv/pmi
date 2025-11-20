@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fetchAllProjects } from "../../services/ApiService";
 import { Project } from "../../models/Project";
 import Box from "@mui/material/Box";
@@ -13,7 +13,7 @@ const HomePage = () => {
   const { data } = useQuery({
     queryKey: ["projects"],
     queryFn: fetchAllProjects,
-    refetchInterval: 5000,
+    refetchInterval: 9000,
   });
 
   return (

@@ -5,24 +5,13 @@ import { ExecutedTool } from "../../models/ExecutedTool";
 const URL = process.env.REACT_APP_WS_URL ?? "";
 
 type Props = {
-  executedTool: ExecutedTool;
+  toolOutput: string;
 };
 
-function ExecutedToolResult({ executedTool }: Props) {
-  const { sendMessage, lastMessage } = useWebSocket(URL + "/toolResult");
-  const [result, setResult] = useState(executedTool.executionResult);
-
-  useEffect(() => {
-    sendMessage(executedTool.id);
-
-    if (lastMessage?.data) {
-      setResult(lastMessage?.data);
-    }
-  }, [lastMessage]);
-
+function ExecutedToolResult({ toolOutput }: Props) {
   return (
     <React.Fragment>
-      <pre>{result}</pre>
+      <pre>{toolOutput}</pre>
     </React.Fragment>
   );
 }

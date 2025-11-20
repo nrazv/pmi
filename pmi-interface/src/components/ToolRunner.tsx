@@ -54,7 +54,7 @@ function ToolRunner({
         sx={{ marginLeft: 2, minWidth: 100 }}
         variant="contained"
         onClick={handelClickButton}
-        disabled={toolArguments == "" && toolToExecute == ""}
+        disabled={toolArguments === "" && toolToExecute === ""}
       >
         Run
       </Button>

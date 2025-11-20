@@ -1,9 +1,10 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import ExecutedToolsList from "./ExecutedToolsList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ExecutedToolResult from "./ExecutedToolResult";
-import { Project } from "../../models/Project";
 import { ExecutedTool } from "../../models/ExecutedTool";
+import { fetchExecutedToolsForProject } from "../../services/ApiService";
+import { Project } from "../../models/Project";
 
 const containerStyle = {
   display: "flex",
@@ -18,32 +19,38 @@ const runningToolResultStyle = {
   flex: 1,
   overflow: "auto",
   maxWidth: 1500,
-  height: 950,
 };
 
 type Props = {
-  project: Project;
+  project?: Project;
+  executedTools: ExecutedTool[];
 };
 
-function ToolsContainer({ project }: Props) {
-  const [executionResult, setExecutionResult] = useState<ExecutedTool>();
+function ToolsContainer({ executedTools }: Props) {
+  const [executionResult, setExecutionResult] = useState<string>();
 
   const handelExecutedToolSelect = (executedTool: ExecutedTool) => {
-    setExecutionResult(executedTool);
+    setExecutionResult(executedTool.executionResult);
   };
+
+  if (executedTools.length <= 0) {
+    return (
+      <Typography variant="caption" color="textDisabled">
+        Nothing executed on this project
+      </Typography>
+    );
+  }
 
   return (
     <Box sx={containerStyle}>
       <Box sx={runningToolStyle}>
         <ExecutedToolsList
           handelSelect={handelExecutedToolSelect}
-          project={project}
+          executedTools={executedTools}
         />
       </Box>
       <Box sx={runningToolResultStyle}>
-        {executionResult && (
-          <ExecutedToolResult executedTool={executionResult} />
-        )}
+        {executionResult && <ExecutedToolResult toolOutput={executionResult} />}
       </Box>
     </Box>
   );

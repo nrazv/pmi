@@ -26,7 +26,7 @@ public class ToolController : ControllerBase
 
 
     [HttpPost("execute", Name = "Run a tool")]
-    public async Task<IActionResult> StartTool(ToolExecutionRequest request)
+    public IActionResult StartTool(ToolExecutionRequest request)
     {
         //{"target":"scanme.nmap.org","tool":"nmap","arguments":"-sC -sV -vv","projectName":"scanme.org"}
 

@@ -22,22 +22,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="pmi.db"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></None>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Content Include="./db/pmi.db">
+		<Content Include="db/pmi.db">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Content Include="./install-tools.sh">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-		</Content>
-	</ItemGroup>
+	</ItemGroup> 
 
 	<ItemGroup>
 		<Using Include="System.Console" Static="true" />

@@ -17,13 +17,15 @@ public class ToolExecutionBackgroundService : BackgroundService
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ProcessManager processManager;
     private readonly IHubContext<ToolHub> _hub;
+    private readonly ILoggerFactory _loggerFactory;
 
-    public ToolExecutionBackgroundService(IServiceScopeFactory scopeFactory, Channel<ToolJob> channel, IHubContext<ToolHub> hub)
+    public ToolExecutionBackgroundService(IServiceScopeFactory scopeFactory, Channel<ToolJob> channel, IHubContext<ToolHub> hub, ILoggerFactory loggerFactory)
     {
         processManager = new ProcessManager();
         _scopeFactory = scopeFactory;
         _channel = channel;
         _hub = hub;
+        _loggerFactory = loggerFactory;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -34,7 +36,6 @@ public class ToolExecutionBackgroundService : BackgroundService
         {
             while (reader.TryRead(out var job))
             {
-                // run job without blocking the loop — fire-and-forget per job
                 _ = Task.Run(() => HandleJobAsync(job, stoppingToken), stoppingToken);
             }
         }
@@ -42,6 +43,7 @@ public class ToolExecutionBackgroundService : BackgroundService
 
     private async Task HandleJobAsync(ToolJob job, CancellationToken cancellationToken)
     {
+        var logger = _loggerFactory.CreateLogger("ToolExecution");
         using var scope = _scopeFactory.CreateScope();
         var projectService = scope.ServiceProvider.GetRequiredService<IProjectService>();
         var executedToolService = scope.ServiceProvider.GetRequiredService<IExecutedToolService>();
@@ -52,13 +54,18 @@ public class ToolExecutionBackgroundService : BackgroundService
         var executedTool = ProjectFactory.CreateExecutedToolFromExecutionRequest(toolId: Guid.Parse(job.ExecutionId), request: job.Request, project: project!, runnerId: null);
         await executedToolService.AddNew(executedTool);
 
+        logger.LogInformation($"\nExecution started for: {job.Request}");
         var process = processManager.CreateNewProcess(job.Request);
+
         process.OutputDataReceived += async (s, e) =>
         {
             if (e.Data is not null)
             {
+                using var eventScope = _scopeFactory.CreateScope();
+                var executedToolService = eventScope.ServiceProvider.GetRequiredService<IExecutedToolService>();
                 await _hub.Clients.Group(executionId).SendAsync("ReceiveOutput", e.Data);
                 await executedToolService.UpdateExecutedToolOutput(executionId, e.Data);
+                logger.LogInformation($"\n ----------------------------\nOUTPUT{e.Data}\n--------------------\n");
             }
         };
 
@@ -66,6 +73,8 @@ public class ToolExecutionBackgroundService : BackgroundService
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
+                using var eventScope = _scopeFactory.CreateScope();
+                var executedToolService = eventScope.ServiceProvider.GetRequiredService<IExecutedToolService>();
                 await executedToolService.UpdateStatus(executionId, ExecutionStatus.Error);
                 await _hub.Clients.Group(executionId).SendAsync("ReceiveError", e.Data);
             }
@@ -75,8 +84,10 @@ public class ToolExecutionBackgroundService : BackgroundService
 
         process.Exited += async (s, e) =>
         {
-            exitTcs.TrySetResult(process.ExitCode);
+            using var eventScope = _scopeFactory.CreateScope();
+            var executedToolService = eventScope.ServiceProvider.GetRequiredService<IExecutedToolService>();
             await executedToolService.UpdateStatus(executionId, ExecutionStatus.Done);
+            exitTcs.TrySetResult(process.ExitCode);
         };
 
         try
@@ -89,29 +100,18 @@ public class ToolExecutionBackgroundService : BackgroundService
             using (cancellationToken.Register(() => exitTcs.TrySetCanceled()))
             {
                 int exitCode = await exitTcs.Task; // WaitForExitAsync alternative
-                // mark done
-                executedTool.Status = ExecutionStatus.Done;
-                executedTool.FinishedDate = DateTime.UtcNow;
-                // await projectService.UpdateExecutedToolAsync(executedTool);
-
                 await _hub.Clients.Group(executionId).SendAsync("StatusUpdate", ExecutionStatus.Done.ToString());
                 await _hub.Clients.Group(executionId).SendAsync("Completed", new { executionId, exitCode });
             }
         }
         catch (OperationCanceledException)
         {
-            // cancellation requested
-            executedTool.Status = ExecutionStatus.Cancelled;
-            executedTool.FinishedDate = DateTime.UtcNow;
-            // await projectService.UpdateExecutedToolAsync(executedTool);
+            logger.LogError($"\n =============== OperationCanceled =================");
             await _hub.Clients.Group(executionId).SendAsync("StatusUpdate", ExecutionStatus.Failed.ToString());
         }
         catch (Exception ex)
         {
-            // general failure
-            executedTool.Status = ExecutionStatus.Failed;
-            executedTool.FinishedDate = DateTime.UtcNow;
-            // await projectService.UpdateExecutedToolAsync(executedTool);
+            logger.LogError($"\n =============== Exception{ex.Message} =================");
             await _hub.Clients.Group(executionId).SendAsync("ReceiveError", $"Host exception: {ex.Message}");
         }
         finally

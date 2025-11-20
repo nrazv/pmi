@@ -1,4 +1,4 @@
-version: "1.0"
+
 services:
   aspnet-app:
     image: pmi-image
@@ -11,4 +11,5 @@ services:
     container_name: pmi-app
     restart: unless-stopped
     volumes:
-      - ./bin/Debug/net9.0:/app
+      - ./pmi-interface/build/:/app/wwwroot
+      - ./pmi/bin/Debug/net9.0:/app

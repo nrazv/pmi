@@ -1,17 +1,24 @@
-import { Box, FormControl, Paper, SelectChangeEvent } from "@mui/material";
+import { Box, FormControl, SelectChangeEvent } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { ToolExecuteRequest } from "../../models/ToolExecuteRequest";
 import { Project } from "../../models/Project";
-import { executeTool } from "../../services/ApiService";
+import {
+  executeTool,
+  fetchExecutedToolsForProject,
+} from "../../services/ApiService";
 import CustomSelectMenu from "../SelectTarget";
 import ToolRunner from "../ToolRunner";
 import ToolsContainer from "../runningTools/ToolsContainer";
+import { ExecutedTool } from "../../models/ExecutedTool";
+import { Await } from "react-router-dom";
 
 type Props = {
   project: Project;
 };
 
 function ExecutionManagerTab({ project }: Props) {
+  const [newExecution, setNewExecution] = useState<string>("");
+  const [executedTools, setExecutedTools] = useState<ExecutedTool[]>([]);
   const [executionRequest, setRequest] = useState<ToolExecuteRequest>({
     target: "",
     tool: "",
@@ -38,8 +45,9 @@ function ExecutionManagerTab({ project }: Props) {
     });
   };
 
-  const runTool = () => {
-    executeTool(executionRequest);
+  const runTool = async () => {
+    const response = await executeTool(executionRequest);
+    setNewExecution(response);
     clearForm();
   };
 
@@ -54,7 +62,15 @@ function ExecutionManagerTab({ project }: Props) {
 
   useEffect(() => {
     setRequest({ ...executionRequest, projectName: project.name });
-  }, []);
+    const loadTools = async () => {
+      const executedTools = await fetchExecutedToolsForProject(
+        project.name ?? ""
+      );
+      setExecutedTools(executedTools);
+    };
+
+    loadTools();
+  }, [newExecution]);
 
   return (
     <Box>
@@ -77,7 +93,7 @@ function ExecutionManagerTab({ project }: Props) {
           />
         </Box>
       </FormControl>
-      <ToolsContainer project={project} />
+      {project && <ToolsContainer executedTools={executedTools} />}
     </Box>
   );
 }
