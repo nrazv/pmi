@@ -1,17 +1,15 @@
-type Props = {
-  date: Date;
-};
+function DateTimeFormat(date: string | Date) {
+  const d = new Date(date);
 
-function DateTimeFormat({ date }: Props) {
   const formattedDate = new Intl.DateTimeFormat("sv-SE", {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-    hour: "numeric",
-    minute: "numeric",
-  }).format(date);
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(d);
 
-  return <span>{formattedDate}</span>;
+  return formattedDate;
 }
 
 export default DateTimeFormat;

@@ -10,6 +10,7 @@ public interface IProjectService
     public Task AddExecutedTool(string projectId, ExecutedToolEntity executedTool);
     public Task<ProjectEntity?> GetById(string id);
     public Task<ProjectEntity?> GetByName(string name);
+    public Task<ProjectEntity?> SearchByName(string name);
 
     public ExecutedToolEntity UpdateExecutedToo(ExecutedToolEntity executedTool);
     public ExecutedToolEntity? GetExecutedTooById(string id);

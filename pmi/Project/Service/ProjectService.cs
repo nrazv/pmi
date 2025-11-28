@@ -14,11 +14,11 @@ public class ProjectService : IProjectService
     private readonly IProjectRepository repository;
     private readonly IExecutedToolRepository executedToolRepository;
 
-    public ProjectService(IProjectRepository projectRepository, IExecutedToolRepository executedToolRepository)
+    public ProjectService(IProjectRepository projectRepository, IExecutedToolRepository executedToolRepository, PmiDbContext pmiDb)
     {
         this.executedToolRepository = executedToolRepository;
         repository = projectRepository;
-        _pmiDb = new PmiDbContext();
+        _pmiDb = pmiDb;
     }
 
     public async Task<List<ProjectEntity>> GetProjects()
@@ -44,6 +44,7 @@ public class ProjectService : IProjectService
         ProjectEntity newProjectEntity = new ProjectEntity
         {
             Name = request.Name,
+            Description = request.Description ?? string.Empty,
             DomainName = request.DomainName ?? string.Empty,
             IpAddress = request.IpAddress ?? string.Empty,
             ProjectInfo = new ProjectInfo
@@ -141,5 +142,10 @@ public class ProjectService : IProjectService
         {
             return OperationResult<string>.Failure($"Resource with ID {id} not found.");
         }
+    }
+
+    public Task<ProjectEntity?> SearchByName(string name)
+    {
+        throw new NotImplementedException();
     }
 }

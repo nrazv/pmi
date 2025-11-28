@@ -49,6 +49,24 @@ public class ProjectController : ControllerBase
         return _mapper.Map<List<ProjectDto>>(response);
     }
 
+    [HttpGet("{name}", Name = "Get project by name")]
+    [ProducesResponseType<ProjectDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetByName(string name)
+    {
+        var result = await _projectService.GetByName(name);
+
+        if (result is not ProjectEntity)
+        {
+            return NotFound(new { message = $"Project with {name} not found" });
+        }
+        else
+        {
+            ProjectDto projectDto = _mapper.Map<ProjectDto>(result);
+            return Ok(projectDto);
+        }
+    }
+
 
     [HttpDelete("{Id}", Name = "Delete project by id")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

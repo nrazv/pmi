@@ -1,15 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
 import { fetchAllProjects } from "../../services/ApiService";
 import { Project } from "../../models/Project";
-import Box from "@mui/material/Box";
-import { Grid } from "@mui/material";
-import ProjectList from "../../components/project/ProjectsList/ProjectList";
-import NavigationTabs from "../../components/project/tabs/NavigationTabs";
+import { styled, Typography, Box } from "@mui/material";
+import { Container, flexbox } from "@mui/system";
+import ProjectsSearchAndFilter from "../../components/ProjectsSearchAndFilter";
+import ProjectPreview from "../../components/project/ProjectPreview";
+import React from "react";
+import NavBar from "../../components/navbar/NavBar";
 
+const title = "Projects";
+const subtitle =
+  "Manage your penetration testing projects and security assessments";
 const HomePage = () => {
-  const [selectedProject, setSelectedProject] = useState<Project>();
-
   const { data } = useQuery({
     queryKey: ["projects"],
     queryFn: fetchAllProjects,
@@ -17,49 +19,37 @@ const HomePage = () => {
   });
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "91vh",
-        overflow: "hidden",
-      }}
-    >
-      <Grid
-        container
-        sx={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "row",
-          overflow: "hidden",
-        }}
-      >
-        <Grid item xs={2} sx={{ overflowY: "auto", height: "100%" }}>
-          <Box
-            sx={{
-              padding: 2,
-              height: "100%",
-              borderRight: 1,
-            }}
-          >
-            {data && (
-              <ProjectList selectProject={setSelectedProject} projects={data} />
-            )}
-          </Box>
-        </Grid>
-        <Grid item flex={1} sx={{ overflowY: "hidden", height: "100%" }}>
-          <Box
-            sx={{
-              padding: 2,
-              height: "100%",
-            }}
-          >
-            {selectedProject && <NavigationTabs project={selectedProject} />}
-          </Box>
-        </Grid>
-      </Grid>
-    </Box>
+    <React.Fragment>
+      <NavBar />
+      <Container sx={{ marginTop: 3, padding: 0 }}>
+        <StyledBox>
+          <Typography variant="subtitle1" color="secondary">
+            {title}
+          </Typography>
+          <Typography color="textSecondary" variant="body2">
+            {subtitle}
+          </Typography>
+          <ProjectsSearchAndFilter />
+        </StyledBox>
+        <ProjectsBox gap={4}>
+          {data?.map((p: Project) => (
+            <ProjectPreview key={p.id} project={p} />
+          ))}
+        </ProjectsBox>
+      </Container>
+    </React.Fragment>
   );
 };
+
+const StyledBox = styled(Box)(({ theme }) => ({}));
+
+const ProjectsBox = styled(Box)(({ theme }) => ({
+  marginTop: 20,
+  padding: "10px",
+  display: "flex",
+  flexWrap: "wrap",
+  height: "70vh",
+  overflowY: "scroll",
+}));
 
 export default HomePage;

@@ -11,6 +11,7 @@ public class ProjectEntity
     [Key]
     public Guid Id { get; init; }
     public required string Name { get; init; }
+    public string? Description { get; set; }
     public string? DomainName { get; set; }
     public string? IpAddress { get; set; }
     public ProjectInfo ProjectInfo { get; set; } = null!;

@@ -13,19 +13,10 @@ public class PmiDbContext : DbContext
     public DbSet<ExecutedToolEntity> ExecutedTools { get; set; }
 
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        string databaseFile = "db/pmi.db";
-        string path = Path.Combine(Environment.CurrentDirectory, databaseFile);
-        string connectionString = $"Data Source={path}";
-        Console.WriteLine($"Connection: {connectionString}");
-        optionsBuilder.UseSqlite(connectionString);
-    }
-
+    public PmiDbContext(DbContextOptions<PmiDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
         modelBuilder.ApplyConfiguration(new ProjectEntityConfiguration());
         base.OnModelCreating(modelBuilder);
     }

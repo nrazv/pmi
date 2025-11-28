@@ -10,6 +10,7 @@ using pmi.Project.Repository;
 using pmi.Project.Service;
 using pmi.Tool.Models;
 using pmi.Tool.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace pmi;
 
@@ -20,17 +21,24 @@ public class Program
 
         var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         var builder = WebApplication.CreateBuilder(args);
+
         builder.Services.AddCors(options =>
         {
             options.AddPolicy(name: MyAllowSpecificOrigins,
                               policy =>
                               {
-                                  policy.WithOrigins("http://localhost:3000")
+                                  policy.WithOrigins("http://localhost:3000", "http://localhost:5000")
                                   .AllowAnyHeader()
                                   .AllowAnyMethod()
                                   .AllowCredentials();
                               });
         });
+
+
+        builder.Services.AddDbContext<PmiDbContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+        );
+
 
         // SignalR
         builder.Services.AddSignalR();
@@ -62,12 +70,20 @@ public class Program
 
         var app = builder.Build();
 
+        var env = app.Environment.EnvironmentName;
+        app.Logger.LogInformation("Running in environment: {Environment}", env);
+
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+
+        //To be removed
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
         // Serve static files (React builds in wwwroot)
         app.UseDefaultFiles();
@@ -77,8 +93,6 @@ public class Program
         app.UseAuthorization();
         app.MapControllers();
         app.MapHub<ToolHub>("/toolhub");
-        app.UseSwagger();
-        app.UseSwaggerUI();
         app.UseWebSockets();
         app.Run();
     }

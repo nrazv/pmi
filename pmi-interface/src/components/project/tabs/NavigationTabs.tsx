@@ -3,7 +3,7 @@ import React from "react";
 import { Project } from "../../../models/Project";
 import TerminalIcon from "@mui/icons-material/Terminal";
 import CustomTabPanel from "./CustomTabPanel";
-import ProjectInfo from "../ProjectInfo";
+import ProjectPreview from "../ProjectPreview";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import ExecutionManagerTab from "../ExecutionManagerTab";
 
@@ -29,11 +29,7 @@ function NavigationTabs({ project }: ProjectTabsProps) {
         </Tooltip>
       </Tabs>
 
-      <CustomTabPanel value={tabIndex} index={0}>
-        {project?.projectInfo && (
-          <ProjectInfo projectInfo={project.projectInfo} />
-        )}
-      </CustomTabPanel>
+      <CustomTabPanel value={tabIndex} index={0}></CustomTabPanel>
 
       <CustomTabPanel value={tabIndex} index={1}>
         {project && <ExecutionManagerTab project={project} />}

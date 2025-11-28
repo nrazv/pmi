@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using pmi.Data;
 
@@ -11,9 +12,11 @@ using pmi.Data;
 namespace pmi.Migrations
 {
     [DbContext(typeof(PmiDbContext))]
-    partial class PmiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251127145857_Update_Project")]
+    partial class Update_Project
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

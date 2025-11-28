@@ -29,6 +29,11 @@ export const fetchAllProjects = async (): Promise<Project[]> => {
   return response.data;
 };
 
+export const fetchProjectByName = async (name: string): Promise<Project> => {
+  const response = await axiosInstance.get<Project>(`project/${name}`);
+  return response.data;
+};
+
 export const fetchInstalledTools = async (): Promise<InstalledTool[]> => {
   const response = await axiosInstance.get<InstalledTool[]>("tool/installed");
   return response.data;
