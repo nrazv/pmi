@@ -24,7 +24,10 @@ const ProjectPage = () => {
 
   return (
     <React.Fragment>
-      <Container sx={{ marginTop: 3, padding: 0 }}>
+      <Container
+        maxWidth={false}
+        sx={{ marginTop: 3, padding: 0, width: "70vw" }}
+      >
         <NavLink
           startIcon={<ArrowBackIcon />}
           disableTouchRipple
@@ -33,7 +36,7 @@ const ProjectPage = () => {
         >
           Back To Projects
         </NavLink>
-        <ProjectInfo />
+        {data && <ProjectInfo project={data} />}
       </Container>
       <Backdrop open={isLoading}>
         <CircularProgress color="primary" />
@@ -44,7 +47,7 @@ const ProjectPage = () => {
 
 const NavLink = styled(Button)(({ theme }) => ({
   transition: "all 0.2s ease",
-  color: theme.palette.text.disabled,
+  color: theme.palette.text.secondary,
   background: "transparent",
   fontSize: 16,
   textTransform: "capitalize",
@@ -52,6 +55,7 @@ const NavLink = styled(Button)(({ theme }) => ({
     cursor: "pointer",
     color: theme.palette.primary.main,
   },
+  marginBottom: 10,
 }));
 
 export default ProjectPage;

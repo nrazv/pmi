@@ -1,9 +1,13 @@
-import { createTheme } from "@mui/material";
+import { colors, createTheme } from "@mui/material";
 
 const AppTheme = createTheme({
+  border: {
+    color: {
+      light: "#2a2a2a",
+    },
+  },
   palette: {
     mode: "dark",
-
     primary: {
       main: "#39FF14", // neon green
       contrastText: "#0A0A0A",

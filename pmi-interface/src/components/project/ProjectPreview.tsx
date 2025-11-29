@@ -5,7 +5,6 @@ import {
   CardContent,
   CardHeader,
   styled,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import { Project } from "../../models/Project";
