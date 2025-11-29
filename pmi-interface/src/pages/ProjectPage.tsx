@@ -5,7 +5,7 @@ import {
   Container,
   styled,
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useParams } from "react-router-dom";
 import ProjectInfo from "../components/ProjectInfo";

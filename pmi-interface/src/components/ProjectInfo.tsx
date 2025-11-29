@@ -5,14 +5,12 @@ import {
   Chip,
   Divider,
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
   Stack,
   styled,
   Typography,
-  useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
 import { Project } from "../models/Project";
@@ -30,7 +28,7 @@ interface Props {
 
 const ProjectInfo = ({ project }: Props) => {
   const [status, setStatus] = useState<string>("");
-  const theme = useTheme();
+
   const statuses = [
     "Not Started",
     "In Progress",
@@ -38,8 +36,11 @@ const ProjectInfo = ({ project }: Props) => {
     "Completed",
     "Archived",
   ];
-  const handleChange = (event: SelectChangeEvent) => {
-    setStatus(event.target.value);
+  const handleChange = (
+    event: SelectChangeEvent<unknown>,
+    _child: React.ReactNode
+  ) => {
+    setStatus(event.target.value as string);
   };
 
   return (
@@ -95,7 +96,11 @@ const ProjectInfo = ({ project }: Props) => {
             Status
           </Typography>
           <StatusSelectForm fullWidth variant="outlined" size="small">
-            <SelectStatus id="select-status">
+            <SelectStatus
+              id="select-status"
+              value={status}
+              onChange={handleChange}
+            >
               {statuses.map((s) => (
                 <SelectMenuItem value={s}>{s}</SelectMenuItem>
               ))}

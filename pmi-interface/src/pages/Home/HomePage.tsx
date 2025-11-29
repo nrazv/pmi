@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchAllProjects } from "../../services/ApiService";
 import { Project } from "../../models/Project";
 import { styled, Typography, Box } from "@mui/material";
-import { Container, flexbox } from "@mui/system";
+import { Container } from "@mui/system";
 import ProjectsSearchAndFilter from "../../components/ProjectsSearchAndFilter";
 import ProjectPreview from "../../components/project/ProjectPreview";
 import React from "react";
