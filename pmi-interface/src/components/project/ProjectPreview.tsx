@@ -124,7 +124,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   transition: "box-shadow 0.3s ease",
   "&:hover": {
     cursor: "pointer",
-    boxShadow: "0px 0px 22px -5px #37ff14b0",
+    boxShadow: "0px 0px 16px -5px #37ff14b0",
   },
 }));
 

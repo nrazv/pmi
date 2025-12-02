@@ -1,11 +1,8 @@
-import { Tab, Tabs, Tooltip } from "@mui/material";
+import { Box, styled, Tab, Tabs, Tooltip } from "@mui/material";
 import React from "react";
 import { Project } from "../../../models/Project";
-import TerminalIcon from "@mui/icons-material/Terminal";
 import CustomTabPanel from "./CustomTabPanel";
-import ProjectPreview from "../ProjectPreview";
-import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
-import ExecutionManagerTab from "../ExecutionManagerTab";
+import ToolRunnerTab from "../ToolRunnerTab";
 
 type ProjectTabsProps = {
   project: Project | undefined;
@@ -18,24 +15,24 @@ function NavigationTabs({ project }: ProjectTabsProps) {
   };
 
   return (
-    <>
-      <Tabs indicatorColor="secondary" value={tabIndex} onChange={handleChange}>
-        <Tooltip title="Project Settings">
-          <Tab id="settings-tab" icon={<SettingsApplicationsIcon />} />
-        </Tooltip>
-
-        <Tooltip title="Execute & Running Tool's">
-          <Tab icon={<TerminalIcon />} id="execute-tab" />
-        </Tooltip>
-      </Tabs>
-
-      <CustomTabPanel value={tabIndex} index={0}></CustomTabPanel>
-
-      <CustomTabPanel value={tabIndex} index={1}>
-        {project && <ExecutionManagerTab project={project} />}
+    <Box mt={3} p={0}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs value={tabIndex} onChange={handleChange}>
+          <ProjectTab id="tools-tab" label="Tools" />
+          <ProjectTab id="processes-tab" label="Processes (0)" />
+          <ProjectTab id="notes-tab" label="Notes (0)" />
+        </Tabs>
+      </Box>
+      <CustomTabPanel value={tabIndex} index={0}>
+        {project && <ToolRunnerTab project={project} />}
       </CustomTabPanel>
-    </>
+      <CustomTabPanel value={tabIndex} index={1}></CustomTabPanel>
+    </Box>
   );
 }
+
+const ProjectTab = styled(Tab)(({ theme }) => ({
+  textTransform: "capitalize",
+}));
 
 export default NavigationTabs;

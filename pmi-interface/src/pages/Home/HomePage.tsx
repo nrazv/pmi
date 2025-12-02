@@ -5,13 +5,15 @@ import { styled, Typography, Box } from "@mui/material";
 import { Container } from "@mui/system";
 import ProjectsSearchAndFilter from "../../components/ProjectsSearchAndFilter";
 import ProjectPreview from "../../components/project/ProjectPreview";
-import React from "react";
+import React, { useState } from "react";
 import NavBar from "../../components/navbar/NavBar";
 
 const title = "Projects";
 const subtitle =
   "Manage your penetration testing projects and security assessments";
+
 const HomePage = () => {
+  const [projects, setProjects] = useState<Project[] | undefined>([]);
   const { data } = useQuery({
     queryKey: ["projects"],
     queryFn: fetchAllProjects,

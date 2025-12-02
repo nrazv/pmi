@@ -11,6 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import ProjectInfo from "../components/ProjectInfo";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProjectByName } from "../services/ApiService";
+import NavigationTabs from "../components/project/tabs/NavigationTabs";
 
 const ProjectPage = () => {
   const { name } = useParams();
@@ -37,6 +38,7 @@ const ProjectPage = () => {
           Back To Projects
         </NavLink>
         {data && <ProjectInfo project={data} />}
+        {data && <NavigationTabs project={data} />}
       </Container>
       <Backdrop open={isLoading}>
         <CircularProgress color="primary" />
