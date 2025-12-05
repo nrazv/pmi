@@ -1,4 +1,5 @@
-﻿using pmi.ExecutedTool.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using pmi.ExecutedTool.Models;
 using pmi.Project.Models;
 using pmi.Utilities;
 namespace pmi.Project.Service;
@@ -19,4 +20,5 @@ public interface IProjectService
     public List<ExecutedToolEntity> GetExecutedToolEntitiesByProjectName(string projectName);
 
     public Task<OperationResult<string>> DeleteById(Guid id);
+    public Task<OperationResult<string>> Patch(string projectName, PatchProjectDto patchProjectDto);
 }

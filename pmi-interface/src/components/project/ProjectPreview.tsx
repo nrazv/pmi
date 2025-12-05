@@ -15,6 +15,8 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import DateTimeFormat from "../../utils/DateTimeFormat";
 import { useNavigate } from "react-router-dom";
+import { JSX } from "react";
+import { ProjectStatus } from "../../models/ProjectStatus";
 
 type ProjectInfoPanelProps = {
   project: Project;
@@ -49,6 +51,12 @@ const ProjectPreview = ({ project }: ProjectInfoPanelProps) => {
     </TargetRecordsStyledBox>
   );
 
+  const renderProjectStatus = (statusString: string) => {
+    const statusEnum =
+      ProjectStatus[statusString as keyof typeof ProjectStatus];
+    return STATUS_COMPONENTS[statusEnum] ?? <span>Default</span>;
+  };
+
   return (
     <StyledCard
       variant="outlined"
@@ -60,16 +68,7 @@ const ProjectPreview = ({ project }: ProjectInfoPanelProps) => {
             {project.name}
           </Typography>
         }
-        action={
-          <ProjectStatus
-            disableRipple
-            disableElevation
-            variant="contained"
-            size="small"
-          >
-            Completed
-          </ProjectStatus>
-        }
+        action={renderProjectStatus(project.projectInfo.status.toString())}
       />
       <CardContent sx={{ paddingTop: 0 }}>
         <Typography color="textSecondary" variant="body2" noWrap maxWidth={300}>
@@ -101,13 +100,11 @@ const ProjectInfo = (title: string, Icon: React.ElementType, info: string) => (
   </Box>
 );
 
-const ProjectStatus = styled(Button)(({ theme }) => ({
+const ProjectStatusComponent = styled(Button)(({ theme }) => ({
   paddingTop: 1,
   paddingBottom: 1,
   marginTop: 2,
   textTransform: "capitalize",
-  backgroundColor: "#37ff141c",
-  color: theme.palette.primary.main,
 }));
 
 const TargetRecordsStyledBox = styled(Box)(({ theme }) => ({
@@ -120,6 +117,7 @@ const TargetRecordsStyledBox = styled(Box)(({ theme }) => ({
 
 const StyledCard = styled(Card)(({ theme }) => ({
   width: 350,
+  height: 260,
   borderRadius: 12,
   transition: "box-shadow 0.3s ease",
   "&:hover": {
@@ -127,5 +125,62 @@ const StyledCard = styled(Card)(({ theme }) => ({
     boxShadow: "0px 0px 16px -5px #37ff14b0",
   },
 }));
+
+const STATUS_COMPONENTS: Record<ProjectStatus, JSX.Element> = {
+  [ProjectStatus.Completed]: (
+    <ProjectStatusComponent
+      disableRipple
+      disableElevation
+      variant="contained"
+      size="small"
+      color="primary"
+      sx={{ backgroundColor: "#37ff141c" }}
+    >
+      Completed
+    </ProjectStatusComponent>
+  ),
+  [ProjectStatus.NotStarted]: (
+    <ProjectStatusComponent
+      disableRipple
+      disableElevation
+      variant="contained"
+      color="inherit"
+      size="small"
+    >
+      Not Started
+    </ProjectStatusComponent>
+  ),
+  [ProjectStatus.InProgress]: (
+    <ProjectStatusComponent
+      disableRipple
+      disableElevation
+      variant="contained"
+      color="info"
+      size="small"
+    >
+      In Progress
+    </ProjectStatusComponent>
+  ),
+  [ProjectStatus.OnHold]: (
+    <ProjectStatusComponent
+      disableRipple
+      disableElevation
+      variant="contained"
+      size="small"
+    >
+      On Hold
+    </ProjectStatusComponent>
+  ),
+  [ProjectStatus.Archived]: (
+    <ProjectStatusComponent
+      disableRipple
+      disableElevation
+      variant="contained"
+      size="small"
+    >
+      Archived
+    </ProjectStatusComponent>
+  ),
+};
 
 export default ProjectPreview;

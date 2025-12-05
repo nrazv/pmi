@@ -67,7 +67,6 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-
         var app = builder.Build();
 
         var env = app.Environment.EnvironmentName;
@@ -89,7 +88,6 @@ public class Program
         app.UseDefaultFiles();
         app.UseStaticFiles();
         app.UseCors(MyAllowSpecificOrigins);
-        app.UseHttpsRedirection();
         app.UseAuthorization();
         app.MapControllers();
         app.MapHub<ToolHub>("/toolhub");

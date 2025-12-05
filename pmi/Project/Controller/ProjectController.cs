@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using pmi.Project.Models;
 using pmi.Project.Service;
+using pmi.Utilities;
 
 namespace pmi.Project.Controller;
 
@@ -85,4 +86,20 @@ public class ProjectController : ControllerBase
         }
     }
 
+    [HttpPatch("{name}", Name = "Update Project")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> PatchProject(string name, [FromBody] PatchProjectDto patchDto)
+    {
+        var result = await _projectService.Patch(name, patchDto);
+
+        if (result.Success is false)
+        {
+            return BadRequest();
+        }
+        else
+        {
+            return Ok();
+        }
+    }
 }

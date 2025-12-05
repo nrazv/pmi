@@ -5,6 +5,7 @@ using pmi.Project.Repository;
 using pmi.ExecutedTool.Models;
 using pmi.ExecutedTool;
 using pmi.Utilities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace pmi.Project.Service;
 
@@ -147,5 +148,26 @@ public class ProjectService : IProjectService
     public Task<ProjectEntity?> SearchByName(string name)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<OperationResult<string>> Patch(string projectName, PatchProjectDto patchProjectDto)
+    {
+
+        if (patchProjectDto is null)
+        {
+            return OperationResult<string>.Failure("Nothing to update");
+        }
+
+        var project = await GetByName(projectName);
+
+        if (project is null)
+        {
+            return OperationResult<string>.Failure("Project not found");
+        }
+
+        ProjectFactory.PatchProject(project, patchProjectDto);
+        await repository.Save();
+
+        return OperationResult<string>.Successful("Ok");
     }
 }

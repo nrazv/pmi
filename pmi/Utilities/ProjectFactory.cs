@@ -23,4 +23,20 @@ public static class ProjectFactory
             ExecutedDated = DateTime.Now
         };
     }
+
+    public static void PatchProject(ProjectEntity project, PatchProjectDto patchProject)
+    {
+
+        if (patchProject.Status.HasValue)
+            project.ProjectInfo.Status = patchProject.Status.Value;
+
+        if (!string.IsNullOrEmpty(patchProject.IpAddress))
+            project.IpAddress = patchProject.IpAddress;
+
+        if (!string.IsNullOrEmpty(patchProject.Description))
+            project.Description = patchProject.Description;
+
+        if (!string.IsNullOrEmpty(patchProject.DomainName))
+            project.DomainName = patchProject.DomainName;
+    }
 }

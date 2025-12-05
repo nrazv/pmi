@@ -12,8 +12,8 @@ using pmi.Data;
 namespace pmi.Migrations
 {
     [DbContext(typeof(PmiDbContext))]
-    [Migration("20251127143707_DbInit")]
-    partial class DbInit
+    [Migration("20251204071043_InitDb")]
+    partial class InitDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,6 +79,9 @@ namespace pmi.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DomainName")
                         .HasColumnType("nvarchar(max)");

@@ -23,7 +23,7 @@ const SelectTool = ({ selectTool }: Props) => {
   return (
     <Box mt={3}>
       <Typography variant="subtitle2" color="secondary" mb={1}>
-        Select Tool
+        Select Tool *
       </Typography>
       <Box
         gap={1}

@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchAllProjects } from "../../services/ApiService";
-import { Project } from "../../models/Project";
+import { fetchAllProjects } from "../services/ApiService";
+import { Project } from "../models/Project";
 import { styled, Typography, Box } from "@mui/material";
 import { Container } from "@mui/system";
-import ProjectsSearchAndFilter from "../../components/ProjectsSearchAndFilter";
-import ProjectPreview from "../../components/project/ProjectPreview";
+import ProjectsSearchAndFilter from "../components/ProjectsSearchAndFilter";
+import ProjectPreview from "../components/project/ProjectPreview";
 import React, { useState } from "react";
-import NavBar from "../../components/navbar/NavBar";
+import NavBar from "../components/navbar/NavBar";
 
 const title = "Projects";
 const subtitle =

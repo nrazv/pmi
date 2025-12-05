@@ -2,8 +2,8 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import { Box, Button, styled } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { Box, styled } from "@mui/material";
+import NewProject from "./NewProject";
 
 function NavBar() {
   return (
@@ -22,15 +22,7 @@ function NavBar() {
             Security Testing & Project Management
           </Typography>
         </Box>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          sx={{ marginLeft: "auto", marginRight: 1, fontSize: 15 }}
-        >
-          New Project
-        </Button>
-        {/* 
-        <NavBarMenu /> */}
+        <NewProject />
       </Toolbar>
     </StyledAppBar>
   );

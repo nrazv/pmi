@@ -6,7 +6,7 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import CustomSelectMenu from "./SelectTarget";
+import SelectTarget from "./SelectTarget";
 
 type Props = {
   handleToolChange: (event: SelectChangeEvent) => void;
@@ -36,12 +36,6 @@ function ToolRunner({
 
   return (
     <FormControl sx={{ marginLeft: 2, display: "flex", flexDirection: "row" }}>
-      <CustomSelectMenu
-        handleSelectionChange={handleToolChange}
-        menuItems={installedTools}
-        selectedValue={toolToExecute}
-        label="Tool"
-      />
       <TextField
         sx={{ marginLeft: 2, minWidth: 400 }}
         variant="outlined"

@@ -27,7 +27,11 @@ const ProjectPage = () => {
     <React.Fragment>
       <Container
         maxWidth={false}
-        sx={{ marginTop: 3, padding: 0, width: "70vw" }}
+        sx={{
+          marginTop: 3,
+          paddingBottom: 10,
+          width: "70vw",
+        }}
       >
         <NavLink
           startIcon={<ArrowBackIcon />}

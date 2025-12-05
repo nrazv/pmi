@@ -2,7 +2,7 @@ import {
   Box,
   Card,
   FormControl,
-  SelectChangeEvent,
+  OutlinedInput,
   Stack,
   styled,
   Typography,
@@ -14,9 +14,7 @@ import {
   executeTool,
   fetchExecutedToolsForProject,
 } from "../../services/ApiService";
-import CustomSelectMenu from "../SelectTarget";
-import ToolRunner from "../ToolRunner";
-import ToolsContainer from "../runningTools/ToolsContainer";
+import SelectTarget from "../SelectTarget";
 import { ExecutedTool } from "../../models/ExecutedTool";
 import { Terminal } from "lucide-react";
 import ToolSearch from "./tool/ToolSearch";
@@ -38,8 +36,8 @@ function ToolRunnerTab({ project }: Props) {
 
   const targets: string[] = [project.domainName, project.ipAddress];
 
-  const handleTargetChange = (event: SelectChangeEvent) => {
-    setRequest({ ...executionRequest, target: event.target.value as string });
+  const handleTargetChange = (target: string): void => {
+    setRequest({ ...executionRequest, target: target });
   };
 
   const handleToolChange = (tool: string) => {
@@ -89,6 +87,17 @@ function ToolRunnerTab({ project }: Props) {
           {Header}
           <ToolSearch />
           <SelectTool selectTool={handleToolChange} />
+          <SelectTarget selectTarget={handleTargetChange} project={project} />
+          <Typography variant="subtitle2" color="secondary" mt={3}>
+            Search Tool
+          </Typography>
+          <FormControl variant="outlined" fullWidth>
+            <StyledOutlinedInput
+              size="small"
+              required
+              placeholder="e.g. tool arguments..."
+            />
+          </FormControl>
         </StyledCard>
         <StyledCard>Running Processes</StyledCard>
       </Stack>
@@ -113,24 +122,38 @@ const Header = (
   </Box>
 );
 
+const StyledOutlinedInput = styled(OutlinedInput)(({ theme }) => ({
+  background: theme.palette.background.default,
+  borderRadius: 0,
+  marginTop: 10,
+  padding: 0,
+  "& .MuiOutlinedInput-notchedOutline": {
+    borderColor: theme.border?.color?.light ?? theme.palette.divider,
+  },
+
+  "&:hover .MuiOutlinedInput-notchedOutline": {
+    borderColor: theme.border?.color?.light ?? theme.palette.divider,
+  },
+
+  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+    borderColor: theme.border?.color?.light ?? theme.palette.divider,
+  },
+}));
+
 export default ToolRunnerTab;
-// <FormControl
-//   sx={{ display: "flex", flexDirection: "row", marginBottom: 2 }}
-// >
-//   <CustomSelectMenu
-//     handleSelectionChange={handleTargetChange}
-//     menuItems={targets}
-//     selectedValue={executionRequest.target}
-//     label="Target"
-//   />
-//   <Box>
-//     <ToolRunner
-//       toolArguments={executionRequest.arguments}
-//       toolToExecute={executionRequest.tool}
-//       handelClickButton={runTool}
-//       handleToolChange={handleToolChange}
-//       handleToolArgumentsChange={handleToolArgumentsChange}
-//     />
-//   </Box>
-// </FormControl>
-// {project && <ToolsContainer executedTools={executedTools} />}
+{
+  /* <FormControl sx={{ display: "flex", flexDirection: "row", marginBottom: 2 }}>
+  <Box>
+    <ToolRunner
+      toolArguments={executionRequest.arguments}
+      toolToExecute={executionRequest.tool}
+      handelClickButton={runTool}
+      handleToolChange={handleToolChange}
+      handleToolArgumentsChange={handleToolArgumentsChange}
+    />
+  </Box>
+</FormControl>;
+{
+  project && <ToolsContainer executedTools={executedTools} />;
+} */
+}
