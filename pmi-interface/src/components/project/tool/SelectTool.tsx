@@ -6,19 +6,14 @@ import { InstalledTool } from "../../../models/InstalledTool";
 
 type Props = {
   selectTool: (t: string) => void;
+  selectedTool: string;
 };
 
-const SelectTool = ({ selectTool }: Props) => {
+const SelectTool = ({ selectTool, selectedTool }: Props) => {
   const { data } = useQuery({
     queryKey: ["installedTools"],
     queryFn: fetchInstalledTools,
   });
-
-  const [selectedTool, setSelectedTool] = useState<string>("");
-  const handelToolSelect = (tool: string) => {
-    setSelectedTool(tool);
-    selectTool(tool);
-  };
 
   return (
     <Box mt={3}>
@@ -40,7 +35,7 @@ const SelectTool = ({ selectTool }: Props) => {
             key={index}
             selected={selectedTool === tool.name}
             tool={tool}
-            onClick={() => handelToolSelect(tool.name)}
+            onClick={() => selectTool(tool.name)}
           />
         ))}
       </Box>

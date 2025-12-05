@@ -7,6 +7,7 @@ import DnsIcon from "@mui/icons-material/Dns";
 type Props = {
   selectTarget: (target: string) => void;
   project: Project;
+  selectedTarget: string;
 };
 
 interface Target {
@@ -15,8 +16,7 @@ interface Target {
   label: string;
 }
 
-function SelectTarget({ selectTarget, project }: Props) {
-  const [selectedTarget, setSelectedTarget] = useState<string>("");
+function SelectTarget({ selectTarget, project, selectedTarget }: Props) {
   const targets: Target[] = [
     { target: project.domainName, icon: LanguageIcon, label: "Domain" },
     { target: project.ipAddress, icon: DnsIcon, label: "IP Address" },
@@ -30,11 +30,12 @@ function SelectTarget({ selectTarget, project }: Props) {
       <Box>
         {targets.map((t) => (
           <Target
+            key={t.target}
             selected={selectedTarget === t.target}
             target={t.target}
             Icon={t.icon}
             label={t.label}
-            onClick={() => setSelectedTarget(t.target)}
+            onClick={() => selectTarget(t.target)}
           />
         ))}
       </Box>

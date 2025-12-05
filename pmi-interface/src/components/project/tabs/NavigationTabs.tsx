@@ -2,7 +2,7 @@ import { Box, styled, Tab, Tabs, Tooltip } from "@mui/material";
 import React from "react";
 import { Project } from "../../../models/Project";
 import CustomTabPanel from "./CustomTabPanel";
-import ToolRunnerTab from "../ToolRunnerTab";
+import ToolRunnerTab from "./ToolRunnerTab";
 
 type ProjectTabsProps = {
   project: Project | undefined;

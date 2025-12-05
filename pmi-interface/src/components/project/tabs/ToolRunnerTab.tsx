@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   FormControl,
   OutlinedInput,
@@ -8,17 +9,17 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { ToolExecuteRequest } from "../../models/ToolExecuteRequest";
-import { Project } from "../../models/Project";
+import { ToolExecuteRequest } from "../../../models/ToolExecuteRequest";
+import { Project } from "../../../models/Project";
 import {
   executeTool,
   fetchExecutedToolsForProject,
-} from "../../services/ApiService";
-import SelectTarget from "../SelectTarget";
-import { ExecutedTool } from "../../models/ExecutedTool";
+} from "../../../services/ApiService";
+import SelectTarget from "../../SelectTarget";
+import { ExecutedTool } from "../../../models/ExecutedTool";
 import { Terminal } from "lucide-react";
-import ToolSearch from "./tool/ToolSearch";
-import SelectTool from "./tool/SelectTool";
+import ToolSearch from "../tool/ToolSearch";
+import SelectTool from "../tool/SelectTool";
 
 type Props = {
   project: Project;
@@ -45,13 +46,18 @@ function ToolRunnerTab({ project }: Props) {
   };
 
   const handleToolArgumentsChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     setRequest({
       ...executionRequest,
       arguments: event.target.value as string,
     });
   };
+
+  const isDisabled =
+    !executionRequest.target?.trim() ||
+    !executionRequest.tool?.trim() ||
+    !executionRequest.projectName?.trim();
 
   const runTool = async () => {
     const response = await executeTool(executionRequest);
@@ -86,18 +92,35 @@ function ToolRunnerTab({ project }: Props) {
         <StyledCard>
           {Header}
           <ToolSearch />
-          <SelectTool selectTool={handleToolChange} />
-          <SelectTarget selectTarget={handleTargetChange} project={project} />
+          <SelectTool
+            selectTool={handleToolChange}
+            selectedTool={executionRequest.tool}
+          />
+          <SelectTarget
+            selectTarget={handleTargetChange}
+            selectedTarget={executionRequest.target}
+            project={project}
+          />
           <Typography variant="subtitle2" color="secondary" mt={3}>
-            Search Tool
+            Tool Arguments
           </Typography>
           <FormControl variant="outlined" fullWidth>
             <StyledOutlinedInput
               size="small"
               required
               placeholder="e.g. tool arguments..."
+              onChange={(e) => handleToolArgumentsChange(e)}
             />
           </FormControl>
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{ marginTop: 3 }}
+            onClick={runTool}
+            disabled={isDisabled}
+          >
+            Run Tool
+          </Button>
         </StyledCard>
         <StyledCard>Running Processes</StyledCard>
       </Stack>
