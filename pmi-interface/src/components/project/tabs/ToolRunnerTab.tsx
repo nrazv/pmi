@@ -20,6 +20,7 @@ import { ExecutedTool } from "../../../models/ExecutedTool";
 import { Terminal } from "lucide-react";
 import ToolSearch from "../tool/ToolSearch";
 import SelectTool from "../tool/SelectTool";
+import RunningProcessContainer from "../../running-process/RunningProcessContainer";
 
 type Props = {
   project: Project;
@@ -32,7 +33,7 @@ function ToolRunnerTab({ project }: Props) {
     target: "",
     tool: "",
     arguments: "",
-    projectName: "",
+    projectName: project.name,
   });
 
   const targets: string[] = [project.domainName, project.ipAddress];
@@ -75,7 +76,7 @@ function ToolRunnerTab({ project }: Props) {
   };
 
   useEffect(() => {
-    setRequest({ ...executionRequest, projectName: project.name });
+    // setRequest({ ...executionRequest, projectName: project.name });
     const loadTools = async () => {
       const executedTools = await fetchExecutedToolsForProject(
         project.name ?? ""
@@ -109,6 +110,7 @@ function ToolRunnerTab({ project }: Props) {
               size="small"
               required
               placeholder="e.g. tool arguments..."
+              value={executionRequest.arguments}
               onChange={(e) => handleToolArgumentsChange(e)}
             />
           </FormControl>
@@ -122,7 +124,7 @@ function ToolRunnerTab({ project }: Props) {
             Run Tool
           </Button>
         </StyledCard>
-        <StyledCard>Running Processes</StyledCard>
+        <RunningProcessContainer executedTools={executedTools} />
       </Stack>
     </Box>
   );
@@ -164,19 +166,3 @@ const StyledOutlinedInput = styled(OutlinedInput)(({ theme }) => ({
 }));
 
 export default ToolRunnerTab;
-{
-  /* <FormControl sx={{ display: "flex", flexDirection: "row", marginBottom: 2 }}>
-  <Box>
-    <ToolRunner
-      toolArguments={executionRequest.arguments}
-      toolToExecute={executionRequest.tool}
-      handelClickButton={runTool}
-      handleToolChange={handleToolChange}
-      handleToolArgumentsChange={handleToolArgumentsChange}
-    />
-  </Box>
-</FormControl>;
-{
-  project && <ToolsContainer executedTools={executedTools} />;
-} */
-}

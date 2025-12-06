@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import React from "react";
-import CreateProjectDialog from "../project/dialogs/CreateProjectDialog";
+import CreateProjectDialog from "../dialogs/CreateProjectDialog";
 import AddIcon from "@mui/icons-material/Add";
 
 function NewProject() {
