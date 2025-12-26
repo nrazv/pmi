@@ -34,6 +34,9 @@ namespace pmi.Migrations
                     b.Property<DateTime?>("ExecutedDated")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("ExecutedModuleId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("ExecutionResult")
                         .HasColumnType("nvarchar(max)");
 
@@ -47,14 +50,14 @@ namespace pmi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ProjectId")
+                    b.Property<Guid?>("ProjectId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("RunnerId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Target")
                         .IsRequired()
@@ -66,9 +69,56 @@ namespace pmi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ExecutedModuleId");
+
                     b.HasIndex("ProjectId");
 
                     b.ToTable("ExecutedTools");
+                });
+
+            modelBuilder.Entity("pmi.Modules.Models.ExecutedModuleEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Target")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ExecutedModules");
+                });
+
+            modelBuilder.Entity("pmi.Modules.Models.ModuleEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Modules");
                 });
 
             modelBuilder.Entity("pmi.Project.Models.ProjectEntity", b =>
@@ -89,6 +139,10 @@ namespace pmi.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.PrimitiveCollection<string>("Subdomain")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -127,10 +181,51 @@ namespace pmi.Migrations
                     b.ToTable("ProjectsInfo");
                 });
 
+            modelBuilder.Entity("pmi.Tool.Models.ExecutableTool", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Arguments")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ModuleEntityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModuleEntityId");
+
+                    b.ToTable("ExecutableTool");
+                });
+
             modelBuilder.Entity("pmi.ExecutedTool.Models.ExecutedToolEntity", b =>
                 {
+                    b.HasOne("pmi.Modules.Models.ExecutedModuleEntity", "ExecutedModule")
+                        .WithMany("ExecutedTools")
+                        .HasForeignKey("ExecutedModuleId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("pmi.Project.Models.ProjectEntity", "Project")
                         .WithMany("ExecutedTools")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("ExecutedModule");
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("pmi.Modules.Models.ExecutedModuleEntity", b =>
+                {
+                    b.HasOne("pmi.Project.Models.ProjectEntity", "Project")
+                        .WithMany("ExecutedModules")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -149,8 +244,31 @@ namespace pmi.Migrations
                     b.Navigation("Project");
                 });
 
+            modelBuilder.Entity("pmi.Tool.Models.ExecutableTool", b =>
+                {
+                    b.HasOne("pmi.Modules.Models.ModuleEntity", "ModuleEntity")
+                        .WithMany("ExecutablesTools")
+                        .HasForeignKey("ModuleEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ModuleEntity");
+                });
+
+            modelBuilder.Entity("pmi.Modules.Models.ExecutedModuleEntity", b =>
+                {
+                    b.Navigation("ExecutedTools");
+                });
+
+            modelBuilder.Entity("pmi.Modules.Models.ModuleEntity", b =>
+                {
+                    b.Navigation("ExecutablesTools");
+                });
+
             modelBuilder.Entity("pmi.Project.Models.ProjectEntity", b =>
                 {
+                    b.Navigation("ExecutedModules");
+
                     b.Navigation("ExecutedTools");
 
                     b.Navigation("ProjectInfo")

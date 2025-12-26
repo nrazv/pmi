@@ -1,25 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
-using pmi.Project.Models;
-using pmi.Data;
+﻿using pmi.Project.Models;
 using pmi.Project.Repository;
 using pmi.ExecutedTool.Models;
 using pmi.ExecutedTool;
 using pmi.Utilities;
-using Microsoft.AspNetCore.Mvc;
 
 namespace pmi.Project.Service;
 
 public class ProjectService : IProjectService
 {
-    private readonly PmiDbContext _pmiDb;
+
     private readonly IProjectRepository repository;
     private readonly IExecutedToolRepository executedToolRepository;
 
-    public ProjectService(IProjectRepository projectRepository, IExecutedToolRepository executedToolRepository, PmiDbContext pmiDb)
+    public ProjectService(IProjectRepository projectRepository, IExecutedToolRepository executedToolRepository)
     {
         this.executedToolRepository = executedToolRepository;
         repository = projectRepository;
-        _pmiDb = pmiDb;
     }
 
     public async Task<List<ProjectEntity>> GetProjects()
@@ -69,7 +65,7 @@ public class ProjectService : IProjectService
     {
         var project = await repository.Get(p => p.Id.Equals(p.Id));
         project?.ExecutedTools.Add(executedTool);
-        _pmiDb.SaveChanges();
+        await repository.Save();
     }
 
     public async Task<ProjectEntity?> GetById(string id)
@@ -79,21 +75,24 @@ public class ProjectService : IProjectService
 
     public async Task<ProjectEntity?> GetByName(string name)
     {
-        return await repository.Get(p => p.Name == name);
+        var project =  await repository.Get(p => p.Name == name);
+        return project;
     }
 
     public ExecutedToolEntity UpdateExecutedToo(ExecutedToolEntity executedTool)
     {
-        var tool = _pmiDb.ExecutedTools.Where((e) => e.Id == executedTool.Id).First();
-        tool.ExecutionResult = executedTool.ExecutionResult;
-        tool.Status = executedTool.Status;
-        tool.FinishedDated = executedTool.FinishedDated;
-        tool.ClientId = executedTool.ClientId;
-        tool.RunnerId = executedTool.RunnerId;
+        // var tool = _pmiDb.ExecutedTools.Where((e) => e.Id == executedTool.Id).First();
 
-        _pmiDb.SaveChanges();
+        // tool.ExecutionResult = executedTool.ExecutionResult;
+        // tool.Status = executedTool.Status;
+        // tool.FinishedDated = executedTool.FinishedDated;
+        // tool.ClientId = executedTool.ClientId;
+        // tool.RunnerId = executedTool.RunnerId;
 
-        return tool;
+        // _pmiDb.SaveChanges();
+
+        // return tool;
+        return null;
 
     }
 
@@ -101,7 +100,7 @@ public class ProjectService : IProjectService
     {
         try
         {
-            return _pmiDb.ExecutedTools.Where((e) => e.Id.Equals(id)).FirstOrDefault();
+            // return _pmiDb.ExecutedTools.Where((e) => e.Id.Equals(id)).FirstOrDefault();
 
         }
         catch (Exception e)
@@ -119,9 +118,10 @@ public class ProjectService : IProjectService
 
     public List<ExecutedToolEntity> GetExecutedToolEntitiesByProjectName(string projectName)
     {
-        return _pmiDb.ExecutedTools.Include(et => et.Project)
-                .Where(et => et.Project.Name == projectName)
-                .ToList();
+        // return _pmiDb.ExecutedTools.Include(et => et.Project)
+        //         .Where(et => et.Project.Name == projectName)
+        //         .ToList();
+        return new List<ExecutedToolEntity>();
     }
 
     public async Task<OperationResult<string>> DeleteById(Guid id)
@@ -169,5 +169,10 @@ public class ProjectService : IProjectService
         await repository.Save();
 
         return OperationResult<string>.Successful("Ok");
+    }
+
+    public async Task SaveChanges()
+    {
+        await repository.Save();
     }
 }

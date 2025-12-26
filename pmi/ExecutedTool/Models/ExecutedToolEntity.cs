@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using pmi.Modules.Models;
 using pmi.Project.Models;
 
 namespace pmi.ExecutedTool.Models;
@@ -11,9 +12,16 @@ public class ExecutedToolEntity
 {
     [Key]
     public required Guid Id { get; init; }
-    public required Guid ProjectId { get; set; }
+    public Guid? ProjectId { get; set; }
+    public Guid? ExecutedModuleId { get; set; }
+
     [JsonIgnore]
-    public ProjectEntity Project { get; set; } = null!;
+    public ProjectEntity? Project { get; set; } = null!;
+
+    [JsonIgnore]
+    public ExecutedModuleEntity? ExecutedModule { get; set; } = null!;
+
+
     public required string Name { get; init; }
     public required string ToolArguments { get; set; }
     public required string Target { get; set; }

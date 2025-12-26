@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using pmi.ExecutedTool.Models;
+using pmi.Modules.Models;
 
 namespace pmi.Project.Models;
 
@@ -15,7 +16,8 @@ public class ProjectEntity
     public string? DomainName { get; set; }
     public string? IpAddress { get; set; }
     public ProjectInfo ProjectInfo { get; set; } = null!;
-    public ICollection<ExecutedToolEntity> ExecutedTools { get; set; } = new List<ExecutedToolEntity>();
+
+    public List<string> Subdomain { get; set; } = new();
+    public List<ExecutedToolEntity> ExecutedTools { get; set; } = new();
+    public List<ExecutedModuleEntity> ExecutedModules { get; set; } = new();
 }
-
-

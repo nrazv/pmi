@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using pmi.Project.Models;
 using pmi.Project.Service;
-using pmi.Utilities;
+
 
 namespace pmi.Project.Controller;
 
@@ -20,6 +20,9 @@ public class ProjectController : ControllerBase
             conf.CreateMap<ProjectInfo, ProjectInfoDto>()
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
             conf.CreateMap<ProjectEntity, ProjectDto>();
+            conf.CreateMap<ProjectInfo, ProjectInfoDto>()
+           .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
+            conf.CreateMap<ProjectEntity, ProjectSummaryDto>();
         }));
     }
 
@@ -44,10 +47,10 @@ public class ProjectController : ControllerBase
 
 
     [HttpGet("all", Name = "Get all projects")]
-    public async Task<List<ProjectDto>> GetAll()
+    public async Task<List<ProjectSummaryDto>> GetAll()
     {
         var response = await _projectService.GetProjects();
-        return _mapper.Map<List<ProjectDto>>(response);
+        return _mapper.Map<List<ProjectSummaryDto>>(response);
     }
 
     [HttpGet("{name}", Name = "Get project by name")]

@@ -21,4 +21,6 @@ public interface IProjectService
 
     public Task<OperationResult<string>> DeleteById(Guid id);
     public Task<OperationResult<string>> Patch(string projectName, PatchProjectDto patchProjectDto);
+
+    public Task SaveChanges();
 }

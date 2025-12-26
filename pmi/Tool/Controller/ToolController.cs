@@ -1,5 +1,4 @@
 ﻿using System.Threading.Channels;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using pmi.DataContext;
 using pmi.ExecutedTool.Models;
@@ -21,7 +20,6 @@ public class ToolController : ControllerBase
         _channel = channel;
         _toolService = toolService;
         _toolsDataJSON = toolsDataJSON;
-
     }
 
 
@@ -38,7 +36,6 @@ public class ToolController : ControllerBase
 
         // 202 Accepted with location to poll (optional)
         return Accepted(new { executionId = id });
-
     }
 
 

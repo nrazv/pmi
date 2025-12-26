@@ -40,7 +40,7 @@ public class Repository<T> : IRepository<T> where T : class
         return query.FirstOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<T>> GetAllWhere(Expression<Func<T, bool>> filter)
+    public virtual async Task<IEnumerable<T>> GetAllWhere(Expression<Func<T, bool>> filter)
     {
         IQueryable<T> query = dbSet;
         query = query.Where(filter);

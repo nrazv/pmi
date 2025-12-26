@@ -11,6 +11,13 @@ using pmi.Project.Service;
 using pmi.Tool.Models;
 using pmi.Tool.Services;
 using Microsoft.EntityFrameworkCore;
+using pmi.DefinedModules.Services;
+using pmi.Modules.Service;
+using pmi.Modules.Repository;
+using pmi.ExecutedModule.Repository;
+using pmi.ExecutedModule.Service;
+using pmi.DefinedModules.Factory;
+using pmi.DefinedModules.BackgroundJob;
 
 namespace pmi;
 
@@ -44,25 +51,45 @@ public class Program
         builder.Services.AddSignalR();
 
 
-        // Channel for jobs
-        var channel = Channel.CreateUnbounded<ToolJob>();
-        builder.Services.AddSingleton(channel);
+        // Channel for tool
+        var toolsChannel = Channel.CreateBounded<ToolJob>(new BoundedChannelOptions(100)
+        {
+            FullMode = BoundedChannelFullMode.Wait
+        });
 
+        // Channel for modules
+        var modulesChannel = Channel.CreateBounded<IModuleBackgroundJob>(new BoundedChannelOptions(100)
+        {
+            FullMode = BoundedChannelFullMode.Wait
+        });
+
+        builder.Services.AddSingleton(toolsChannel);
+        builder.Services.AddSingleton(modulesChannel);
 
         // Add services
         builder.Services.AddScoped<IToolService, ToolService>();
         builder.Services.AddScoped<IProjectService, ProjectService>();
         builder.Services.AddScoped<IExecutedToolService, ExecutedToolService>();
+        builder.Services.AddScoped<IDefinedModuleService, DefinedModuleService>();
+        builder.Services.AddScoped<IModuleService, ModuleService>();
+        builder.Services.AddScoped<IExecutedModuleService, ExecutedModuleService>();
+
+
+        // Add Background services
         builder.Services.AddHostedService<ToolExecutionBackgroundService>();
+        builder.Services.AddHostedService<ModuleBackgroundService>();
 
         // Add repository
         builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
         builder.Services.AddScoped<IExecutedToolRepository, ExecutedToolRepository>();
+        builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
+        builder.Services.AddScoped<IExecutedModuleRepository, ExecutedModuleRepository>();
 
+        // Add Factories
+        builder.Services.AddScoped<IExecutedModuleFactory, ExecutedModuleFactory>();
 
         builder.Services.AddScoped<ToolsDataJSON>();
         builder.Services.AddScoped<ProjectEntityBuilder>();
-        builder.Services.AddScoped<PmiDbContext>();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
