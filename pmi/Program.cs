@@ -18,6 +18,8 @@ using pmi.ExecutedModule.Repository;
 using pmi.ExecutedModule.Service;
 using pmi.DefinedModules.Factory;
 using pmi.DefinedModules.BackgroundJob;
+using pmi.Subdomain.Repository;
+using pmi.Subdomain.Service;
 
 namespace pmi;
 
@@ -73,6 +75,7 @@ public class Program
         builder.Services.AddScoped<IDefinedModuleService, DefinedModuleService>();
         builder.Services.AddScoped<IModuleService, ModuleService>();
         builder.Services.AddScoped<IExecutedModuleService, ExecutedModuleService>();
+        builder.Services.AddScoped<ISubdomainService, SubdomainService>();
 
 
         // Add Background services
@@ -84,6 +87,7 @@ public class Program
         builder.Services.AddScoped<IExecutedToolRepository, ExecutedToolRepository>();
         builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
         builder.Services.AddScoped<IExecutedModuleRepository, ExecutedModuleRepository>();
+        builder.Services.AddScoped<ISubdomainRepository, SubdomainRepository>();
 
         // Add Factories
         builder.Services.AddScoped<IExecutedModuleFactory, ExecutedModuleFactory>();

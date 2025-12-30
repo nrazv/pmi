@@ -1,4 +1,4 @@
-using pmi.DefinedModules.CRT.Models;
+using pmi.DefinedModules.Models;
 using pmi.Modules.Models;
 using pmi.Project.Models;
 

@@ -1,9 +1,9 @@
-using pmi.DefinedModules.CRT.Models;
+using pmi.DefinedModules.Models;
 
 namespace pmi.DefinedModules.Services;
 
 
 public interface IDefinedModuleService
 {
-    Task ExecuteModuleAsync(ModuleExecutionRequest request, Guid id);
+    Task ExecuteModuleAsync(ModuleExecutionRequest request);
 }

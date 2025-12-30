@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using pmi.DefinedModules.CRT.Models;
+using pmi.DefinedModules.Models;
 using pmi.DefinedModules.Services;
 using pmi.ExecutedModule.Service;
 using pmi.Modules.Models;
@@ -25,8 +25,7 @@ public class DefinedModulesController : ControllerBase
     [HttpPost("execute", Name = "Execute module")]
     public async Task<IActionResult> ExecuteModule(ModuleExecutionRequest request)
     {
-        var id = Guid.NewGuid();
-        await service.ExecuteModuleAsync(request, id);
+        await service.ExecuteModuleAsync(request);
         return Ok();
     }
 

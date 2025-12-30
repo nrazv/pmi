@@ -11,6 +11,7 @@ public class ProjectEntityConfiguration : IEntityTypeConfiguration<ProjectEntity
         builder.Navigation(e => e.ProjectInfo).AutoInclude();
         builder.Navigation(e => e.ExecutedTools).AutoInclude();
         builder.Navigation(e => e.ExecutedModules).AutoInclude();
+        builder.Navigation(e => e.Subdomains).AutoInclude();
         builder.HasOne(e => e.ProjectInfo)
                .WithOne(e => e.Project)
                .HasForeignKey<ProjectInfo>(e => e.ProjectId)

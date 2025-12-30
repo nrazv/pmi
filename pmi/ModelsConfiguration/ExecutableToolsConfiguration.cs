@@ -10,7 +10,6 @@ public class ExecutableToolsConfiguration : IEntityTypeConfiguration<ExecutableT
     {
         builder.HasOne(et => et.ModuleEntity)
         .WithMany(m => m.ExecutablesTools)
-        .HasForeignKey(et => et.ModuleEntityId)
-        .OnDelete(DeleteBehavior.Cascade);
+        .HasForeignKey(et => et.ModuleEntityId);
     }
 }

@@ -18,13 +18,12 @@ public class ExecutedToolEntityConfiguration : IEntityTypeConfiguration<Executed
         builder
             .HasOne(et => et.Project)
             .WithMany(p => p.ExecutedTools)
-            .HasForeignKey(et => et.ProjectId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .HasForeignKey(et => et.ProjectId);
 
         builder
             .HasOne(et => et.ExecutedModule)
             .WithMany(em => em.ExecutedTools)
             .HasForeignKey(et => et.ExecutedModuleId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

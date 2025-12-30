@@ -22,4 +22,23 @@ public class ProcessManager
 
         return process;
     }
+
+    public Process CreateNewProcess(string tool, string toolArguments, string target)
+    {
+        Process process = new Process
+        {
+            StartInfo = {
+            FileName = tool,
+                Arguments = $"{target}  {toolArguments}",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            },
+            EnableRaisingEvents = true
+        };
+
+        return process;
+    }
+
 }

@@ -1,8 +1,9 @@
 using System.Threading.Channels;
 using Microsoft.AspNetCore.SignalR;
 using pmi.DefinedModules.BackgroundJob;
-using pmi.DefinedModules.CRT.Models;
+using pmi.DefinedModules.CRT;
 using pmi.DefinedModules.Factory;
+using pmi.DefinedModules.Models;
 using pmi.DefinedModules.ModulesHub;
 using pmi.ExecutedModule.Service;
 using pmi.Modules.Models;
@@ -46,13 +47,22 @@ public class DefinedModuleService : IDefinedModuleService
     }
 
 
-    public async Task ExecuteModuleAsync(ModuleExecutionRequest request, Guid id)
+    public async Task ExecuteModuleAsync(ModuleExecutionRequest request)
     {
         var moduleToExecute = await _moduleService.GetByName(request.ModuleName) ?? throw new InvalidOperationException($"Module '{request.ModuleName}' not found");
         var newModule = await PersistExecutedModule(moduleToExecute, request);
 
         foreach (var tool in newModule.ExecutedTools)
         {
+            if (tool.Name == "crt")
+            {
+                CrtDomainEnumeration crtModuleJob = new CrtDomainEnumeration(
+                    executionId: tool.Id, request: request, scopeFactory: _scopeFactory
+                );
+                _channel.Writer.TryWrite(crtModuleJob);
+                continue;
+            }
+
             var job = new ModuleProcessJob(executionId: tool.Id, hub: _hub, _scopeFactory, request: new ToolExecutionRequest
             {
                 Target = tool.Target,

@@ -4,6 +4,7 @@ using pmi.ExecutedTool.Models;
 using pmi.ModelsConfiguration;
 using pmi.Modules.Models;
 using pmi.Project.Models;
+using pmi.Subdomain.Models;
 
 
 namespace pmi.Data;
@@ -15,6 +16,7 @@ public class PmiDbContext : DbContext
     public DbSet<ExecutedToolEntity> ExecutedTools { get; set; }
     public DbSet<ExecutedModuleEntity> ExecutedModules { get; set; }
     public DbSet<ModuleEntity> Modules { get; set; }
+    public DbSet<SubdomainEntity> Subdomains { get; set; }
 
 
     public PmiDbContext(DbContextOptions<PmiDbContext> options) : base(options) { }
