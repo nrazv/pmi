@@ -13,7 +13,7 @@ function NewProject() {
         onClick={() => setOpenDialog(true)}
         variant="contained"
         startIcon={<AddIcon />}
-        sx={{ marginLeft: "auto", marginRight: 1, fontSize: 15 }}
+        sx={{ marginRight: 1, fontSize: 15 }}
       >
         New Project
       </Button>

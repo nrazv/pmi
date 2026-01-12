@@ -2,10 +2,14 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import { Box, styled } from "@mui/material";
+import { Box, Button, styled } from "@mui/material";
+import SettingsIcon from "@mui/icons-material/Settings";
 import NewProject from "./NewProject";
+import { useNavigate } from "react-router-dom";
 
 function NavBar() {
+  const navigate = useNavigate();
+
   return (
     <StyledAppBar position="sticky">
       <Toolbar sx={toolbarStyles}>
@@ -22,6 +26,20 @@ function NavBar() {
             Security Testing & Project Management
           </Typography>
         </Box>
+        <Button
+          sx={{
+            marginLeft: "auto",
+            marginRight: 2,
+            textTransform: "capitalize",
+            fontSize: 15,
+            borderColor: "#353535ff",
+          }}
+          variant="outlined"
+          startIcon={<SettingsIcon />}
+          onClick={() => navigate("/settings")}
+        >
+          Settings
+        </Button>
         <NewProject />
       </Toolbar>
     </StyledAppBar>

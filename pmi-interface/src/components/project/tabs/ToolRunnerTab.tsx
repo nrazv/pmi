@@ -76,7 +76,6 @@ function ToolRunnerTab({ project }: Props) {
   };
 
   useEffect(() => {
-    // setRequest({ ...executionRequest, projectName: project.name });
     const loadTools = async () => {
       const executedTools = await fetchExecutedToolsForProject(
         project.name ?? ""

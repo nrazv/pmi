@@ -1,5 +1,7 @@
 import { ExecutedTool } from "../models/ExecutedTool";
 import { InstalledTool } from "../models/InstalledTool";
+import { ModuleExecutionRequest } from "../models/ModuleExecutionRequest";
+import { Module } from "../models/Modules";
 import { Project } from "../models/Project";
 import { ToolExecuteRequest } from "../models/ToolExecuteRequest";
 import axiosInstance from "./axios";
@@ -50,5 +52,15 @@ export const fetchExecutedToolsForProject = async (
 
 export const executeTool = async (request: ToolExecuteRequest) => {
   const response = await axiosInstance.post("tool/execute", request);
+  return response.data;
+};
+
+export const fetchModules = async (): Promise<Module[]> => {
+  const response = await axiosInstance.get<Module[]>("modules/all");
+  return response.data;
+};
+
+export const executeModule = async (request: ModuleExecutionRequest) => {
+  const response = await axiosInstance.post("definedmodules/execute", request);
   return response.data;
 };
